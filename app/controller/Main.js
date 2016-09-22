@@ -40,6 +40,7 @@ Ext.define('Youngshine.controller.Main', {
 				consult: this.navConsult,
 				teacher: this.navTeacher,
 				kclist: this.navKclist,
+				classes: this.navClasses,
 				accnt: this.navAccnt,
 				accntconsult: this.navAccntConsult,
 				
@@ -111,6 +112,9 @@ Ext.define('Youngshine.controller.Main', {
 
 	navKclist: function(){
 		this.getApplication().getController('Kclist').showKclist();
+	},
+	navClasses: function(){
+		this.getApplication().getController('Classes').showClasses();
 	},
 	
 	navAccnt: function(){

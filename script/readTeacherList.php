@@ -1,6 +1,6 @@
 <?php
 
-// 教师列表（某个particular校区）
+// 教师列表（某个particular学校，包含下属分校区）
 require_once 'db/response.php';
 require_once 'db/request.php';
 require_once('db/database_connection.php');
