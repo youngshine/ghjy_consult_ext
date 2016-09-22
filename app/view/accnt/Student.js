@@ -129,6 +129,7 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 		var me = this; console.log(record.data)
 		me.parentView.down('textfield[name=studentName]').setValue(record.data.studentName)
 		me.parentView.down('hiddenfield[name=studentID]').setValue(record.data.studentID)
+		me.parentView.down('hiddenfield[name=wxID]').setValue(record.data.wxID)
 		this.destroy()
 	},
 

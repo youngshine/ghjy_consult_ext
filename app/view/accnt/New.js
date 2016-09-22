@@ -67,6 +67,9 @@ Ext.define('Youngshine.view.accnt.New', {
 		},{
 			xtype: 'hiddenfield',
 			name : 'studentID',
+		},{	
+			xtype: 'hiddenfield',
+			name: 'wxID', //用于发模版消息
 		},{
 			xtype: 'datefield',
             fieldLabel: '日期',
@@ -124,7 +127,13 @@ Ext.define('Youngshine.view.accnt.New', {
 		//selType: 'cellmodel',
 		//store: 'AccntDetail',
 		store: Ext.create('Ext.data.Store', {
-		     fields: ['kclistID','title','unitprice','hour','amount'],
+			fields: [
+	            {name: "title", type: "string"},
+	            {name: "kclistID"},
+				{name: "unitprice", defaultValue: 0}, // 0,不是大小班
+				{name: "hour", defaultValue: 0},
+				{name: "amount"},
+	        ],
 		}),
 		 
 	    columns: [{
@@ -136,8 +145,14 @@ Ext.define('Youngshine.view.accnt.New', {
 			menuDisabled: true,
 			dataIndex: 'title'
 		}, {
+			text: '单价',
+			width: 60,
+			menuDisabled: true,
+			dataIndex: 'unitprice',
+			align: 'right'
+		}, {
 			text: '课时',
-			width: 40,
+			width: 80,
 			menuDisabled: true,
 			dataIndex: 'hour',
 			align: 'center'
@@ -186,6 +201,8 @@ Ext.define('Youngshine.view.accnt.New', {
 		var accntType = accntType.boxLabel
 		console.log(accntType)
 		*/
+		var accntType = this.down('radiogroup[itemId=accntType]').getChecked()[0].boxLabel
+		
 		var payment = this.down('radiogroup[itemId=payment]').getChecked()[0]
 		if (!payment){
 			Ext.Msg.alert('提示','请选择付款方式！');
@@ -196,6 +213,7 @@ Ext.define('Youngshine.view.accnt.New', {
 		
 		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
 			studentID = this.down('hiddenfield[name=studentID]').getValue().trim(),
+			wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
 			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
 			accntDate = this.down('datefield[name=accntDate]').getValue(), 
 			amount = this.down('numberfield[name=amount]').getValue(),
@@ -214,29 +232,45 @@ Ext.define('Youngshine.view.accnt.New', {
 			Ext.Msg.alert('提示','请添加课程明细！');
 			return;
 		}
+		
+		//if list.length == 0 '至少报读一个班级'
+		var arrList = [] //,jsonList = {};
+		var store = me.down('grid').getStore()
+		store.each(function(rec,index){
+			arrList.push(rec.data)
+			//jsonList[index] = rec.data.kclistID 
+		})
+		if (arrList.length == 0){	
+			Ext.Msg.alert('提示','请添加课程明细！');
+			return;
+		}
+		//console.log(arrList);
+		//console.log(JSON.stringify(jsonList));
+		//arrList = JSON.stringify(jsonList); 
+		arrList = JSON.stringify(arrList); //传递到后台，必须字符串
 
 		Ext.Msg.confirm('询问','是否保存？',function(id){
 			if( id == "yes"){
-				//if(viewEF.isValid()){
-					var obj = {
-						"studentName": studentName,
-						"studentID": studentID,
-						"accntType": accntType,
-						"accntDate": accntDate,
-						"payment": payment,
-						"amount": amount,
-						"amount_ys": amount_ys,
-						"amount_owe": amount_owe,
-						"note": note,	
-						"consultID_owe": consultID_owe,						
-						"consultID": localStorage.consultID, //当前登录的咨询师
-						"schoolsubID": localStorage.schoolsubID,
-						"schoolID": localStorage.schoolID,
-					};
-					console.log(obj);
-					//me.close();
-					me.fireEvent('save',obj,me); //后台数据判断，才能关闭  本窗口win
-				//}
+				var obj = {
+					"studentName": studentName,
+					"studentID": studentID,
+					"wxID": wxID, //发微信模版通知消息
+					"accntType": accntType,
+					"accntDate": accntDate,
+					"payment": payment,
+					"amount": amount,
+					"amount_ys": amount_ys,
+					"amount_owe": amount_owe,
+					"note": note,	
+					"consultID_owe": consultID_owe,	//业绩归属
+					"arrList": arrList, // 报读的多个课程列表					
+					"consultID": localStorage.consultID, //当前登录的咨询师
+					"schoolsubID": localStorage.schoolsubID,
+					"schoolID": localStorage.schoolID,
+				};
+				console.log(obj);
+				//me.close();
+				me.fireEvent('save',obj,me); //后台数据判断，才能关闭  本窗口win
 			}
 		})
 	},
@@ -244,6 +278,14 @@ Ext.define('Youngshine.view.accnt.New', {
 	// 添加课程明晰
 	onAddrow: function(){
 		var me = this;
+		
+		// 有学生，才有退费
+		var studentName = this.down('textfield[name=studentName]').getValue().trim()
+		if (studentName == ''){
+			Ext.Msg.alert('提示','请先选择学生！');
+			return;
+		}
+		
 		// 有无选中
 		var radios = this.down('radiogroup[itemId=accntType]')
 		var radioChecked = radios.getChecked()[0]

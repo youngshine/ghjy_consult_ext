@@ -23,7 +23,7 @@ Ext.define('Youngshine.controller.Accnt', {
 				//del: this.accntDelete,
 			},	
 			'accnt-new': {
-				//save: this.accntnewSave,
+				save: this.accntnewSave,
 				addrow: this.accntnewAddrow
 			},			
         });
@@ -78,16 +78,84 @@ Ext.define('Youngshine.controller.Accnt', {
 		var combo = me.accntnew.down('combo[name=consultID_owe]')
 		combo.setValue(localStorage.consultID)
 		combo.setRawValue(localStorage.consultName)
+		
+		//先清除暂存的报读明细
+		me.accntnew.down('grid').getStore().removeAll()
     },
+	
+	// 保存：accntType:一对一、大小班、退费退班 
+	accntnewSave: function( obj,oldView )	{
+    	var me = this; console.log(obj)
+		// 传递参数，带有数组（子表多条记录）
+		Ext.Ajax.request({
+		    url: me.getApplication().dataUrl + 'createAccntAndDetail.php',
+		    params: obj,
+		    success: function(response){ 
+				console.log(response.responseText)
+				var ret = Ext.JSON.decode(response.responseText)
+				console.log(ret.data.accntID);
+				obj.accntID = ret.data.accntID
+				//obj.created = '刚刚';
+				Ext.getStore('Accnt').insert(0,obj)	
+				
+				Ext.Viewport.remove(me.accntnew,true)
+				Ext.Viewport.setActiveItem(me.accnt);
+				
+				// 发送模版消息：电子收据
+				wxTpl(obj); 
+
+				function wxTpl(person){
+					var objWx = {
+						wxID       : person.wxID, // 发消息学生家长
+						student    : person.studentName,
+						accntID    : person.accntID,
+						accntType  : person.accntType,
+						accntDate  : person.accntDate,
+						amount     : person.amount,
+						amount_ys  : person.amount_ys,
+						school     : localStorage.schoolName
+					}
+					console.log(objWx)
+					Ext.Ajax.request({
+					    url: me.getApplication().dataUrl+'weixinJS_gongzhonghao/wx_msg_tpl_accnt.php',
+					    params: objWx,
+					    success: function(response){
+					        var text = response.responseText;
+					        // process server response here
+							console.log(text)//JSON.parse
+					    }
+					});
+				} // 模版消息end
+				
+				/* php 后台无法处理，数组arrClassess???
+				if(obj.accntType == '大小班'){
+					//往class_student表，添加报读的班级，直接在后台php处理？？？
+					var objClasses = {
+						accntID: obj.accntID,
+						studentID: obj.studentID,
+						classID: obj.arrClasses['classID'],
+					}
+					Ext.Ajax.request({
+					    url: me.getApplication().dataUrl + 'createClassStudent.php',
+					    params: obj.arrClasses,
+					    success: function(response){
+					    	
+					    }
+					})
+				}	*/		
+		    }
+		});
+	},
 	
 	// 添加报读课程明细（大小班、一对一、退费）
 	accntnewAddrow: function(accntType,oldView){
 		var me = this;
+		
 		switch(accntType){
 		case '大小班':
 			me.kclist = Ext.create('Youngshine.view.accnt.KclistClass')
 			me.kclist.parentView = oldView; //方便父表单显示选中项
-			me.kclist.show()
+			me.kclist.showAt(0,0)
 			
 			var obj = {
 				"schoolID": localStorage.getItem('schoolID'),
@@ -133,12 +201,13 @@ Ext.define('Youngshine.controller.Accnt', {
 			
 			var obj = {
 				"schoolID": localStorage.getItem('schoolID'),
-				"studentID": studentID
+				"studentID": oldView.down('hiddenfield[name=studentID]').getValue()
+				// 有学生，才能有供退费的单子
 			} 
-			var store = Ext.getStore('AccntDetail'); 
+			var store = Ext.getStore('AccntDetail'); //store会重复冲突吗？
 			store.removeAll();
 	        var url = this.getApplication().dataUrl + 
-				'readAccntDetailByRefund.php?data=' + JSON.stringify(obj);
+				'readAccntDetailListByRefund.php?data=' + JSON.stringify(obj);
 			store.getProxy().url = url;
 	        store.load({
 	            callback: function(records, operation, success) {

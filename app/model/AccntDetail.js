@@ -3,20 +3,19 @@ Ext.define('Youngshine.model.AccntDetail', {
     extend: 'Ext.data.Model',
     //idProperty: 'admin_id',
     fields: [
+		{name: 'accntdetailID'}, 
 		{name: 'accntID'}, 
+		{name: 'title'}, 
+		{name: 'kclistID'}, 
+		{name: 'kcType'}, //课程分类：大小班、一对一
+		{name: 'kmType'}, //学科分类
+		{name: 'unitprice'},  // 一对一单价
+		{name: 'hour'}, 
+		{name: 'amount'}, // 金额
+		
+		{name: 'accntType'}, 
 		{name: 'accntDate'}, 
-		{name: 'accntType'}, // 大小班，一对一，退费
-		{name: 'studentID'}, // 学生
+		{name: 'studentID'}, 
 		{name: 'studentName'},
-		{name: 'amount'}, 
-		{name: 'amount_ys'}, //应收
-
-		//{name: 'created'},
-		
-		{name: 'consultID'},//所属的咨询师
-		
-		{name: 'schoolsubID'}, //分校区
-		
-		{name: 'schoolID'},
     ]
 });

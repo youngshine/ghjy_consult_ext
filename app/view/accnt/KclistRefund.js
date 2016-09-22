@@ -1,5 +1,5 @@
 // 课程：大小班
-Ext.define('Youngshine.view.accnt.KclistClass' ,{ 
+Ext.define('Youngshine.view.accnt.KclistRefund' ,{ 
 	extend: 'Ext.window.Window',
     alias : 'widget.kclist',
 	id: 'multiSelectKclist',
@@ -18,7 +18,7 @@ Ext.define('Youngshine.view.accnt.KclistClass' ,{
 
 	defaultFocus: 'search',
 	
-    title : '大小班课程（双击选择）',
+    title : '退费（双击选择）',
 	//titleAlign: 'center',
 	
 	parentView: null, //父表单，返回显示选中值
@@ -53,7 +53,7 @@ Ext.define('Youngshine.view.accnt.KclistClass' ,{
 	items: [{
 		xtype: 'grid',
 		stripeRows: true,
-		store: 'Kclist',
+		store: 'AccntDetail',
 		headerBorders: false,
 		//bodyStyle: 'background:#ffe;',
 	    viewConfig: {
@@ -139,7 +139,7 @@ Ext.define('Youngshine.view.accnt.KclistClass' ,{
 		var obj = {
 			kclistID : record.data.kclistID,
 			title: record.data.title, //用于前端显示，不保存到后端
-			//unitprice: 0, //单价大小班0
+			unitprice: record.data.unitprice, //单价大小班0
 			hour: record.data.hour, // 
 			amount: record.data.amount,
 		}
