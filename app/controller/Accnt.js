@@ -207,7 +207,7 @@ Ext.define('Youngshine.controller.Accnt', {
 			var store = Ext.getStore('AccntDetail'); //store会重复冲突吗？
 			store.removeAll();
 	        var url = this.getApplication().dataUrl + 
-				'readAccntDetailListByRefund.php?data=' + JSON.stringify(obj);
+				'readAccntDetailByRefund.php?data=' + JSON.stringify(obj);
 			store.getProxy().url = url;
 	        store.load({
 	            callback: function(records, operation, success) {

@@ -179,17 +179,21 @@ Ext.define('Youngshine.view.classes.List' ,{
 			items: [{
 				//iconCls: 'add',
 				icon: 'resources/images/my_right_icon.png',
-				tooltip: '明细',
+				tooltip: '班级学生',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onDetail(rec); 
+					grid.up('window').onStudent(rec); 
 				}	
 			}]	
  		 
 	     }],     
 	}],
-	
+
+	onStudent: function(rec){ 
+		var me = this;
+		this.fireEvent('student',rec,me);
+	},	
 	onNew: function(){ 
 		this.down('grid').getSelectionModel().deselectAll();
 		this.fireEvent('addnew');

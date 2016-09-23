@@ -12,7 +12,10 @@ Ext.define('Youngshine.controller.Classes', {
 		selector: 'classes-new'
 	},{
 		ref: 'classesedit',
-		selector: 'classes-edit'	
+		selector: 'classes-edit'
+	},{
+		ref: 'classesstudent',
+		selector: 'classes-student'	
 	}],
 
     init: function() {
@@ -21,12 +24,16 @@ Ext.define('Youngshine.controller.Classes', {
 				addnew: this.classesNew,
 				edit: this.classesEdit, //自定义事件 user...
 				del: this.classesDelete,
+				student: this.classesStudent, //显示班级学生，用于转班等
             },
 			'classes-edit': {
 				save: this.classeseditSave, 
             },
 			'classes-new': {
                 save: this.classesnewSave,
+            },
+			'classes-student': {
+                del: this.classesstudentDelete,
             }					
         });
     },
@@ -89,6 +96,72 @@ Ext.define('Youngshine.controller.Classes', {
 	    });		
 	},	
 	
+	// 待排课的报读课程，show跳转来自main controller
+	showPk: function(){
+		var me = this;
+		me.classes = Ext.create('Youngshine.view.classes.Pk')
+		//Ext.widget('student-list');
+
+		var obj = {
+			//"schoolID": localStorage.schoolID,
+			"consultID": localStorage.getItem('consultID'),
+			"accntType": "大小班"
+		}		
+        var url = this.getApplication().dataUrl + 
+			'readAccntDetailByUnclass.php?data=' + JSON.stringify(obj);
+        var store = Ext.getStore('AccntDetail');
+		store.removeAll();
+		store.clearFilter();
+		store.getProxy().url = url;
+        store.load({
+            callback: function(records, operation, success) {
+				console.log(records);
+            },
+            scope: this
+        });
+		
+		// 全校课程
+		var obj = {
+			"schoolID": localStorage.getItem('schoolID'),
+			"schoolsubID": localStorage.getItem('schoolsubID'),
+			"kcType": '大小班'
+		}
+	    var url = this.getApplication().dataUrl + 
+			'readKclist.php?data=' + JSON.stringify(obj);
+	    var store = Ext.getStore('Kclist');
+		store.removeAll();
+		store.clearFilter();
+		store.getProxy().url = url;
+	    store.load({
+	        callback: function(records, operation, success) {
+				console.log(records);
+	        },
+	        scope: this
+	    });		
+	},	
+
+    classesStudent: function(record) {
+		var me = this;
+		me.classesstudent = Ext.create('Youngshine.view.classes.Student')
+		me.classesstudent.parentRecord = record // 传递参数
+
+		var obj = {
+			"classID": record.data.classID
+		}
+	    var url = this.getApplication().dataUrl + 
+			'readClassesStudent.php?data=' + JSON.stringify(obj);
+	    var store = Ext.getStore('ClassesStudent');
+		store.removeAll();
+		store.clearFilter();
+		store.getProxy().url = url;
+	    store.load({
+	        callback: function(records, operation, success) {
+				console.log(records);
+	        },
+	        scope: this
+	    });
+    },
+		
     classesNew: function(button) {
 		var me = this;
 		me.classesnew = Ext.create('Youngshine.view.classes.New')
@@ -192,5 +265,29 @@ Ext.define('Youngshine.controller.Classes', {
 				Ext.Msg.alert('网络错误','服务请求失败');
 			}
 		});	
+	},
+	
+	// 移出学生（不是真正删除??，才能统计原来上课，用点名表）
+	classesstudentDelete: function( record,oldView )	{
+    	var me = this; 
+		
+		var obj = {
+			classstudentID: record.data.classstudentID, // unique删除
+			studentID: record.data.studentID,
+			classID: record.data.classID,
+			accntdetailID: record.data.accntdetailID //用于更改排班状态isClassed=0
+		};
+		console.log(obj)
+		
+		Ext.Ajax.request({
+            url: me.getApplication().dataUrl + 'deleteClassStudent.php',
+            params: obj,
+            success: function(response){
+				var ret = Ext.JSON.decode(response.responseText)	
+				Ext.toast('学生移出成功',3000)
+				// 消除本行
+				oldView.down('grid').getStore().remove(record)
+			},
+        });
 	},	
 });

@@ -1,7 +1,7 @@
-// 测评详细记录，包括题目及其对错10
-Ext.define('Youngshine.store.Topic-assess',{
+// 班级的学生, 结束current=0不显示
+Ext.define('Youngshine.store.ClassesStudent',{
     extend: 'Ext.data.Store',
-    model: 'Youngshine.model.Topic-assess',
+    model: 'Youngshine.model.ClassesStudent',
 	
     proxy: {
         type: 'jsonp',
