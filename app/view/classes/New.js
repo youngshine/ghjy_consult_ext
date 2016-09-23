@@ -235,17 +235,17 @@ Ext.define('Youngshine.view.classes.New', {
 		var arrList = [] //,jsonList = {};
 		var store = me.down('grid').getStore()
 		store.each(function(rec,index){
-			arrList.push(rec.data)
+			var timely_list = rec.data.w + rec.data.h + ':' + rec.data.m
+			arrList.push(timely_list)
+			//arrList.push(rec.data)
 			//jsonList[index] = rec.data.kclistID 
 		})
 		if (arrList.length == 0){	
 			Ext.Msg.alert('提示','请添加上课时间！');
 			return;
 		}
-		//console.log(arrList);
-		//console.log(JSON.stringify(jsonList));
-		//arrList = JSON.stringify(jsonList); 
-		arrList = JSON.stringify(arrList); //传递到后台，必须字符串
+		//arrList = JSON.stringify(arrList); //传递到后台，必须字符串
+		arrList = arrList.join(',')
 
 		Ext.Msg.confirm('询问','是否保存？',function(id){
 			if( id == "yes"){

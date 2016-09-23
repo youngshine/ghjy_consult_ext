@@ -12,11 +12,14 @@ Ext.define('Youngshine.Application', {
 
     controllers: [
         // TODO: add controllers here
-		'Main','Student','Teacher','Consult','Accnt','Kclist','Classes'//,'Schoolsub'
+		'Main','Student','Teacher','Consult','Accnt','Kclist','Classes','One2one'//,'Schoolsub'
     ],
 
     stores: [
         // TODO: add stores here
-		'Schoolsub','Student','Consult','Teacher','Kclist','Accnt','AccntDetail','Classes','ClassesStudent'
+		'Schoolsub','Student','Consult','Teacher','Kclist',
+		'Accnt','AccntDetail',
+		'Classes','ClassesStudent',
+		'Study' //一对一
     ]
 });

@@ -42,6 +42,7 @@ Ext.define('Youngshine.controller.Main', {
 				kclist: this.navKclist,
 				classes: this.navClasses,
 				classesPk: this.navClassesPk,
+				one2onePk: this.navOne2onePk,
 				accnt: this.navAccnt,
 				accntconsult: this.navAccntConsult,
 				
@@ -120,6 +121,9 @@ Ext.define('Youngshine.controller.Main', {
 	
 	navClassesPk: function(){
 		this.getApplication().getController('Classes').showPk();
+	},
+	navOne2onePk: function(){
+		this.getApplication().getController('One2one').showPk();
 	},
 	
 	navAccnt: function(){
