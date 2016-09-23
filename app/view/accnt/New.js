@@ -227,11 +227,12 @@ Ext.define('Youngshine.view.accnt.New', {
 			return;
 		}
 		
+		/*
 		var store = me.down('grid').getStore()
 		if (store.getCount()==0){
 			Ext.Msg.alert('提示','请添加课程明细！');
 			return;
-		}
+		} */
 		
 		//if list.length == 0 '至少报读一个班级'
 		var arrList = [] //,jsonList = {};

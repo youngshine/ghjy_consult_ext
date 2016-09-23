@@ -8,7 +8,7 @@ Ext.define('Youngshine.view.classes.Pk' ,{
 	modal: true,
     autoShow: true,
 	//resizable: false,
-	width: 600,
+	width: 750,
 	height: 550,
 	maximizable: true,
 	//maximized: true,
@@ -97,26 +97,26 @@ Ext.define('Youngshine.view.classes.Pk' ,{
 			width: 30,
 			items: [{
 				//iconCls: 'add',
-				icon: 'resources/images/my_edit_icon.png',
-				tooltip: '修改',
+				icon: 'resources/images/my_input_icon.png',
+				tooltip: '分班',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮当前选择行？？？不是自动？
 					var rec = grid.getStore().getAt(rowIndex);
 					//Ext.Msg.alert('Sell', 'Sell ' + rec.get('company'));
 					//me.fireEvent('adminEdit');
-					grid.up('window').onEdit(rec); 
+					grid.up('window').onClasses(rec); 
 				}	
 			}]	
 
 	     }],     
 	}],
 
-	onEdit: function(rec){ 
+	onClasses: function(rec){ 
 		if (rec.data.consultID != localStorage.consultID){
 			Ext.Msg.alert('提示','非班级创建人，不能修改！');
-			return;
+			//return;
 		}
-		this.fireEvent('edit',rec);
+		this.fireEvent('classes',rec);
 	},
 	
 	onFilter: function(accntType,studentName){

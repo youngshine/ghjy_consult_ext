@@ -12,7 +12,12 @@ Ext.define('Youngshine.view.classes.Edit', {
 	//height: 300,
 	title : '修改班级',
 
-    fbar : ['->',{
+    fbar : [{
+    	text: '＋添加上课时间',
+		handler: function(btn){
+			btn.up('window').onAddrow();
+		}
+    },'->',{
 		text: '保存',
 		handler: function(btn){
 			btn.up('window').onSave();
@@ -82,63 +87,181 @@ Ext.define('Youngshine.view.classes.Edit', {
 			xtype: 'hiddenfield',//修改的唯一id,隐藏
 			name: 'classID',
 		}],
+		
+	},{ //上课时间列表
+		plugins: [
+			Ext.create('Ext.grid.plugin.CellEditing', {
+				clicksToEdit: 1
+			})
+		], 
+		xtype: 'grid',
+		height: 100,
+		tripeRows: true,
+		store: Ext.create('Ext.data.Store', {
+			fields: [
+	            //{name: "timely_list", type: "string"},
+				{name: "w", type: "string"},
+				{name: "h", type: "string"},
+				{name: "m", type: "string"},
+	        ],
+		}),
+		 
+	    columns: [{
+			text: '上课星期',
+			flex: 1,
+			sortable: false,
+			menuDisabled: true,
+			dataIndex: 'w',
+            editor: {
+                xtype:'combo', // 可以录入 检测方法 的 条件
+				store: {
+					fields: ['value'],
+					data : [
+						{"value":"周一"},
+						{"value":"周二"},
+						{"value":"周三"},
+						{"value":"周四"},
+						{"value":"周五"},
+						{"value":"周六"},
+						{"value":"周日"},
+					]
+				},
+				valueField: 'value',
+				displayField: 'value',
+				editable: false,
+            }
+ 		},{	 
+			text: '时',
+			width: 80,
+			sortable: false,
+			menuDisabled: true,
+			dataIndex: 'h',
+            editor: {
+                xtype:'combo', // 可以录入 检测方法 的 条件
+				store: {
+					fields: ['value'],
+					data : [
+						{"value":"08"},
+						{"value":"09"},
+						{"value":"10"},
+						{"value":"11"},
+						{"value":"13"},
+						{"value":"14"},
+						{"value":"15"},
+						{"value":"16"},
+						{"value":"17"},
+						{"value":"19"},
+						{"value":"20"},
+					]
+				},
+				valueField: 'value',
+				displayField: 'value',
+				editable: false,
+            }
+ 		},{	
+			text: '分',
+			width: 80,
+			sortable: false,
+			menuDisabled: true,
+			dataIndex: 'm',
+            editor: {
+                xtype:'combo', // 可以录入 检测方法 的 条件
+				store: {
+					fields: ['value'],
+					data : [
+						{"value":"00"},
+						{"value":"05"},
+						{"value":"10"},
+						{"value":"15"},
+						{"value":"20"},
+						{"value":"25"},
+						{"value":"30"},
+						{"value":"35"},
+						{"value":"40"},
+						{"value":"45"},
+						{"value":"50"},
+						{"value":"55"},
+					]
+				},
+				valueField: 'value',
+				displayField: 'value',
+				editable: false,
+            }
+ 		},{	
+ 			menuDisabled: true,
+ 			sortable: false,
+ 			xtype: 'actioncolumn',
+ 			width: 30,
+ 			items: [{
+ 				//iconCls: 'add',
+ 				icon: 'resources/images/my_delete_icon.png',
+ 				tooltip: '删除',
+ 				handler: function(grid, rowIndex, colIndex) {
+ 					grid.getSelectionModel().select(rowIndex); // 高亮
+ 					var rec = grid.getStore().getAt(rowIndex);
+ 					grid.up('window').onDelete(rec); 
+ 				}	
+ 			}]
+		}],	
     }],
 	
 	onSave: function(){
 		var me = this;
-/*		
-		console.log(this.down('radiogroup[itemId=wl]').getChecked())
-		// 有无选中
-		var sx = this.down('radiogroup[itemId=sx]').getChecked()[0], 
-			wl = this.down('radiogroup[itemId=wl]').getChecked()[0],
-			hx = this.down('radiogroup[itemId=hx]').getChecked()[0];
-		sx = sx != null ? sx.inputValue : 0
-		wl = wl != null ? wl.inputValue : 0
-		hx = hx != null ? hx.inputValue : 0
-		// 拼接 成绩: 数组：数理化科学水平 1,1,3,2
-		var level_list = sx + ',' + wl + ',' + hx //+ ',' + science
-		console.log(level_list)
-*/		
-		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
-			gender = this.down('combo[name=gender]').getValue(),
+	
+		var title = this.down('textfield[name=title]').getValue().trim(),
 			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
-			born = this.down('datefield[name=born]').getValue(), 
-			grade = this.down('combo[name=grade]').getValue(),
-			phone = this.down('textfield[name=phone]').getValue().trim(),
-			addr = this.down('textfield[name=addr]').getValue().trim(),
-			//district = this.down('textfield[name=district]').getValue().trim(),
-			//school = this.down('textfield[name=school]').getValue().trim(),
+			beginDate = this.down('datefield[name=beginDate]').getValue(), 
+			kclistID = this.down('combo[name=kclistID]').getValue(),
+			persons = this.down('numberfield[name=persons]').getValue(),
 			note = this.down('textfield[name=note]').getValue().trim(),
-			schoolsubID = this.down('combo[name=schoolsubID]').getValue(),
-			studentID = this.down('hiddenfield[name=studentID]').getValue() // unique
-
-		if (studentName == ''){
-			Ext.Msg.alert('提示','姓名不能空白！');
-			return;
-		}
-		if (phone == ''){
-			Ext.Msg.alert('提示','电话不能空白！');
-			return;
-		}
+			teacherID = this.down('combo[name=teacherID]').getValue(),
+			teacherID_chief = this.down('combo[name=teacherID_chief]').getValue(),
+			classID = this.down('hiddenfield[name=classID]').getValue() //unique
 		
+		if (title == ''){
+			Ext.Msg.alert('提示','班级名称不能空白！');
+			return;
+		}	
+		if (persons == 0){
+			Ext.Msg.alert('提示','请输入定员人数！');
+			return;
+		} /* 可能尚且无法指定教师，先为0
+		if (teacherID == null){
+			Ext.Msg.alert('提示','请选择任课教师！');
+			return;
+		} */
+		if(teacherID==null) teacherID=0
+		if(teacherID_chief==null) teacherID_chief=0
+			
+		var arrList = [] //,jsonList = {};
+		var store = me.down('grid').getStore()
+		store.each(function(rec,index){
+			arrList.push(rec.data)
+			//jsonList[index] = rec.data.kclistID 
+		})
+		if (arrList.length == 0){	
+			Ext.Msg.alert('提示','请添加上课时间！');
+			return;
+		}
+		//console.log(arrList);
+		//console.log(JSON.stringify(jsonList));
+		//arrList = JSON.stringify(jsonList); 
+		arrList = JSON.stringify(arrList); //传递到后台，必须字符串
 		
 		Ext.Msg.confirm('询问','确认修改保存？',function(id){
 			if( id == "yes"){
 				var obj = {
-					"studentName": studentName,
-					"gender": gender,
-					"born": born,
-					"phone": phone,
-					"addr": addr,
-					//"district": district,
-					"grade": grade,
-					//"school": school,
-					//"level_list": level_list,
-					"note": note,
-					"schoolsubID": schoolsubID,
-					"studentID": studentID, // unique
-					//"consultID": localStorage.consultID, 
-					//微信注册的，尚未分配咨询师 consultID=0 ??未归属不显示，等待校长归属
+					"title": title,
+					"beginDate": beginDate,
+					"kclistID": kclistID,
+					"persons": persons,
+					"note": note,	
+					"arrList": arrList,
+					"teacherID": teacherID,	
+					"teacherID_chief": teacherID_chief,						
+					"consultID": localStorage.consultID, //当前登录的咨询师
+					"schoolsubID": localStorage.schoolsubID, 
+					"classID": classID, // unique
 				};
 				console.log(obj);
 				//me.close();
@@ -151,24 +274,16 @@ Ext.define('Youngshine.view.classes.Edit', {
 		})
 	},
 	
-	// 查找选择所在省市县
-	onDistrict: function(e,input){
-		var me = this;
-
-		var win = Ext.create('Youngshine.view.student.District'); 
-		win.showAt(e.getXY())  
-		
-		// 带入参数：当前js textfield，返回值显示
-		win.input = input;
-		//win.down('treepanel').store = store;
-		
-		/*
-		var loader = new Ext.ux.tree.XmlTreeLoader({
-			preloadChildren: true,//若为true，则loader在节点第一次访问时加载"children"的属性
-			clearOnLoad: false,//（可选）默认为true。在读取数据前移除已存在的节点
-			dataUrl:'resources/data/county.xml'
-		}),
-		console.log(loader);  */
-
+	// 添加上课时间记录
+	onAddrow: function(){
+		var me = this;	
+		me.down('grid').getStore().add({w:'周日',h:'08','m':'00'});
+		//me.down('grid').getStore().add({w:'周日'},{h:'08'});
+		//me.fireEvent('addrow',me); 
+	},
+	// 删除行
+	onDelete: function(record){
+		var me = this; console.log(record)
+		me.down('grid').getStore().remove(record); //store选择的排除，从 检测项目.. 
 	},
 });

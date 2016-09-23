@@ -16,6 +16,9 @@ Ext.define('Youngshine.controller.Classes', {
 	},{
 		ref: 'classesstudent',
 		selector: 'classes-student'	
+	},{
+		ref: 'classespk',
+		selector: 'classes-pk'
 	}],
 
     init: function() {
@@ -34,6 +37,12 @@ Ext.define('Youngshine.controller.Classes', {
             },
 			'classes-student': {
                 del: this.classesstudentDelete,
+            },
+			'classes-pk': {
+                classes: this.classespkClasses,
+            },
+			'classes-classes': {
+                choose: this.classesclassesChoose,
             }					
         });
     },
@@ -139,6 +148,45 @@ Ext.define('Youngshine.controller.Classes', {
 	        scope: this
 	    });		
 	},	
+	// 分班
+    classespkClasses: function(record) {
+		var me = this;
+		me.classespkclasses = Ext.create('Youngshine.view.classes.Classes')
+		me.classespkclasses.parentRecord = record // 传递参数
+
+		var obj = {
+			"kclistID": record.data.kclistID
+		}
+	    var url = this.getApplication().dataUrl + 
+			'readClassesListByKclist.php?data=' + JSON.stringify(obj);
+	    var store = Ext.getStore('Classes');
+		store.removeAll();
+		store.clearFilter();
+		store.getProxy().url = url;
+	    store.load({
+	        callback: function(records, operation, success) {
+				console.log(records);
+	        },
+	        scope: this
+	    });
+    },
+	classesclassesChoose: function(obj,oldView){
+		var me = this;
+		Ext.data.JsonP.request({ 
+            url: Youngshine.app.getApplication().dataUrl +  'createClassesStudent.php',
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+				Ext.Msg.alert('提示','分班成功！');
+				oldView.destroy()
+				
+				// 原来待分班当前行消失
+				me.classespk.down('grid').getStore().remove(record)		
+            }
+		});
+	},
 
     classesStudent: function(record) {
 		var me = this;
@@ -165,6 +213,9 @@ Ext.define('Youngshine.controller.Classes', {
     classesNew: function(button) {
 		var me = this;
 		me.classesnew = Ext.create('Youngshine.view.classes.New')
+		
+		// 清除暂存表格数据
+		me.classesnew.down('grid').getStore().removeAll() 
     },
 	classesnewSave: function(obj,win){ //obj用户信息
 		var me = this;
@@ -202,6 +253,9 @@ Ext.define('Youngshine.controller.Classes', {
 		me.classesedit = Ext.create('Youngshine.view.classes.Edit') 
 		//Ext.widget('classes-edit');
         me.classesedit.down('form').loadRecord(record); //binding data
+		
+		// 清除暂存表格数据
+		me.classesedit.down('grid').getStore().removeAll() 
     },
 	classeseditSave: function(obj,oldWin){ //obj用户信息
 		var me = this;

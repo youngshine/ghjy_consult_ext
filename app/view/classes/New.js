@@ -12,7 +12,12 @@ Ext.define('Youngshine.view.classes.New', {
 	//layout: 'fit',
 	title : '新增大小班级',
 
-    fbar : ['->',{
+    fbar : [{
+    	text: '＋添加上课时间',
+		handler: function(btn){
+			btn.up('window').onAddrow();
+		}
+    },'->',{
 		text: '保存',
 		handler: function(btn){
 			btn.up('window').onSave();
@@ -78,6 +83,122 @@ Ext.define('Youngshine.view.classes.New', {
 			editable: false,
 			fieldLabel: '教师主管'	
 		}],
+		
+	},{
+		plugins: [
+			Ext.create('Ext.grid.plugin.CellEditing', {
+				clicksToEdit: 1
+			})
+		], 
+		xtype: 'grid',
+		height: 100,
+		tripeRows: true,
+		store: Ext.create('Ext.data.Store', {
+			fields: [
+	            //{name: "timely_list", type: "string"},
+				{name: "w", type: "string"},
+				{name: "h", type: "string"},
+				{name: "m", type: "string"},
+	        ],
+		}),
+		 
+	    columns: [{
+			text: '上课星期',
+			flex: 1,
+			sortable: false,
+			menuDisabled: true,
+			dataIndex: 'w',
+            editor: {
+                xtype:'combo', // 可以录入 检测方法 的 条件
+				store: {
+					fields: ['value'],
+					data : [
+						{"value":"周一"},
+						{"value":"周二"},
+						{"value":"周三"},
+						{"value":"周四"},
+						{"value":"周五"},
+						{"value":"周六"},
+						{"value":"周日"},
+					]
+				},
+				valueField: 'value',
+				displayField: 'value',
+				editable: false,
+            }
+ 		},{	 
+			text: '时',
+			width: 80,
+			sortable: false,
+			menuDisabled: true,
+			dataIndex: 'h',
+            editor: {
+                xtype:'combo', // 可以录入 检测方法 的 条件
+				store: {
+					fields: ['value'],
+					data : [
+						{"value":"08"},
+						{"value":"09"},
+						{"value":"10"},
+						{"value":"11"},
+						{"value":"13"},
+						{"value":"14"},
+						{"value":"15"},
+						{"value":"16"},
+						{"value":"17"},
+						{"value":"19"},
+						{"value":"20"},
+					]
+				},
+				valueField: 'value',
+				displayField: 'value',
+				editable: false,
+            }
+ 		},{	
+			text: '分',
+			width: 80,
+			sortable: false,
+			menuDisabled: true,
+			dataIndex: 'm',
+            editor: {
+                xtype:'combo', // 可以录入 检测方法 的 条件
+				store: {
+					fields: ['value'],
+					data : [
+						{"value":"00"},
+						{"value":"05"},
+						{"value":"10"},
+						{"value":"15"},
+						{"value":"20"},
+						{"value":"25"},
+						{"value":"30"},
+						{"value":"35"},
+						{"value":"40"},
+						{"value":"45"},
+						{"value":"50"},
+						{"value":"55"},
+					]
+				},
+				valueField: 'value',
+				displayField: 'value',
+				editable: false,
+            }
+ 		},{	
+ 			menuDisabled: true,
+ 			sortable: false,
+ 			xtype: 'actioncolumn',
+ 			width: 30,
+ 			items: [{
+ 				//iconCls: 'add',
+ 				icon: 'resources/images/my_delete_icon.png',
+ 				tooltip: '删除',
+ 				handler: function(grid, rowIndex, colIndex) {
+ 					grid.getSelectionModel().select(rowIndex); // 高亮
+ 					var rec = grid.getStore().getAt(rowIndex);
+ 					grid.up('window').onDelete(rec); 
+ 				}	
+ 			}]
+		}],	
     }],
    
 	onSave: function(){
@@ -110,6 +231,21 @@ Ext.define('Youngshine.view.classes.New', {
 		} */
 		if(teacherID==null) teacherID=0
 		if(teacherID_chief==null) teacherID_chief=0
+			
+		var arrList = [] //,jsonList = {};
+		var store = me.down('grid').getStore()
+		store.each(function(rec,index){
+			arrList.push(rec.data)
+			//jsonList[index] = rec.data.kclistID 
+		})
+		if (arrList.length == 0){	
+			Ext.Msg.alert('提示','请添加上课时间！');
+			return;
+		}
+		//console.log(arrList);
+		//console.log(JSON.stringify(jsonList));
+		//arrList = JSON.stringify(jsonList); 
+		arrList = JSON.stringify(arrList); //传递到后台，必须字符串
 
 		Ext.Msg.confirm('询问','是否保存？',function(id){
 			if( id == "yes"){
@@ -119,6 +255,7 @@ Ext.define('Youngshine.view.classes.New', {
 					"kclistID": kclistID,
 					"persons": persons,
 					"note": note,	
+					"arrList": arrList,
 					"teacherID": teacherID,	
 					"teacherID_chief": teacherID_chief,						
 					"consultID": localStorage.consultID, //当前登录的咨询师
@@ -130,6 +267,19 @@ Ext.define('Youngshine.view.classes.New', {
 				me.fireEvent('save',obj,me); 
 			}
 		})
+	},
+	
+	// 添加上课时间记录
+	onAddrow: function(){
+		var me = this;	
+		me.down('grid').getStore().add({w:'周日',h:'08','m':'00'});
+		//me.down('grid').getStore().add({w:'周日'},{h:'08'});
+		//me.fireEvent('addrow',me); 
+	},
+	// 删除行
+	onDelete: function(record){
+		var me = this; console.log(record)
+		me.down('grid').getStore().remove(record); //store选择的排除，从 检测项目.. 
 	},
 	
 });
