@@ -13,7 +13,7 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 
     title : '课程内容（知识点）',
 	
-	record: null, // 父表参数传递，该学生信息
+	parentRecord: null, // 父表参数传递，该学生信息
 
 	fbar: [{
 		xtype: 'button',
@@ -80,7 +80,7 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 	         text: '课时',
 	         width: 30,
 			 menuDisabled: true,
-	         dataIndex: 'hour',
+	         dataIndex: 'times',
 			 align: 'center' 
 	     }, {
 	         text: '上课时间',
@@ -121,7 +121,7 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高粱
 					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onStudyKcb(rec); 
+					grid.up('window').onKcb(rec); 
 				}	
 			}]		 		 
 	     }],     
@@ -132,39 +132,18 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 		var me = this;
 		
 		this.down('grid').getSelectionModel().deselectAll();
-		
-		if(Ext.getCmp('multiSelectZsd')){
-			Ext.getCmp('multiSelectZsd').setActive(true)
-			Ext.getCmp('multiSelectZsd').show()
-			return
-		}else{
-			/*
-	        var store = Ext.getStore('Zsd');
-			store.removeAll();
-			store.clearFilter();
-			var obj = {
-				"subject": me.record.data.km // 考试内容知识点，会跨年级grade
-			}
-			var url = Youngshine.getApplication().dataUrl + 
-				'readZsdList.php?data='+ JSON.stringify(obj); ;
-			store.getProxy().url = url;
-	        store.load({
-	            callback: function(records, operation, success) {
-					//console.log(records);
-	            },
-	            scope: this
-	        }); // end store知识点
-			*/
-			var win = Ext.create('Youngshine.view.study.Zsd',{
-				record: me.record //父表参数传递：学生信息，包括购买id
-			}); 
-			win.showAt(e.getX()-200,100)
-			//win.showAt(e.getX(),0) //win.showAt(e.getXY()) 
-	        //var store = Ext.getStore('Zsd');
-			//store.clearFilter(true)
-			// 清除原有数据
-			Ext.getStore('Zsd').removeAll()
-		}
+
+		var win = Ext.create('Youngshine.view.one2one.Zsd',{
+			parentRecord: me.parentRecord, //父表参数传递：学生信息
+			parentView: me
+		}); 
+		win.showAt(e.getX()+200,e.getY()-200)
+		//win.showAt(e.getX(),0) //win.showAt(e.getXY()) 
+        //var store = Ext.getStore('Zsd');
+		//store.clearFilter(true)
+		// 清除原有数据
+		Ext.getStore('Zsd').removeAll()
+	
 	},
 
 	onDelete: function(rec){
@@ -177,28 +156,8 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 		});
 	},
 	
-	onStudyKcb: function(rec){
-		console.log(rec)
-		var win = Ext.create("Youngshine.view.study.Study-kcb",{record: rec})
-		win.down('form').loadRecord(rec) // form绑定记录
-		/*
-		// 读取当前知识点的学科的校区教师，
-		var obj = {
-			"zsdID": rec.data.zsdID,
-			"schoolID": localStorage.schoolID
-		}
-        var url = Youngshine.app.getApplication().dataUrl + 
-			'readTeacherList.php?data=' + JSON.stringify(obj);
-        var store = Ext.getStore('Teacher');
-		store.removeAll();
-		store.clearFilter();
-		store.getProxy().url = url;
-        store.load({
-            callback: function(records, operation, success) {
-				console.log(records);
-            },
-            scope: this
-        });  */
+	onKcb: function(rec){
+		var me = this
+		me.fireEvent('kcb',rec, me);
 	},
-
 });

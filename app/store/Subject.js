@@ -1,6 +1,6 @@
-Ext.define('Youngshine.store.Prepaid',{
+Ext.define('Youngshine.store.Subject',{
     extend: 'Ext.data.Store',
-    model: 'Youngshine.model.Prepaid',
+    model: 'Youngshine.model.Subject',
 	
     proxy: {
         type: 'jsonp',
@@ -11,9 +11,5 @@ Ext.define('Youngshine.store.Prepaid',{
         }
     },
     autoLoad: false,
-	
-	sorters: {
-		property: 'created',
-		direction: 'Desc'
-	}
+
 });

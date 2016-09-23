@@ -16,8 +16,13 @@ Ext.define('Youngshine.controller.One2one', {
                 study: this.one2onepkStudy,
             },
 			'one2one-study': {
-                //choose: this.classesclassesChoose,
-            }					
+                //add: this.one2onestudyAdd,
+				del: this.one2onestudyDelete,
+				kcb: this.one2onestudyKcb
+            },
+			'zsd': {
+				choose: this.zsdChoose
+			}					
         });
     },
 	
@@ -66,36 +71,10 @@ Ext.define('Youngshine.controller.One2one', {
 	        },
 	        scope: this
 	    });
-    },
-	classesclassesChoose: function(obj,oldView){
-		var me = this;
-		Ext.data.JsonP.request({ 
-            url: Youngshine.app.getApplication().dataUrl +  'createClassesStudent.php',
-            callbackKey: 'callback',
-            params:{
-                data: JSON.stringify(obj)
-            },
-            success: function(result){
-				Ext.Msg.alert('提示','分班成功！');
-				oldView.destroy()
-				
-				// 原来待分班当前行消失
-				me.classespk.down('grid').getStore().remove(record)		
-            }
-		});
-	},
-
-    classesStudent: function(record) {
-		var me = this;
-		me.classesstudent = Ext.create('Youngshine.view.classes.Student')
-		me.classesstudent.parentRecord = record // 传递参数
-
-		var obj = {
-			"classID": record.data.classID
-		}
-	    var url = this.getApplication().dataUrl + 
-			'readClassesStudent.php?data=' + JSON.stringify(obj);
-	    var store = Ext.getStore('ClassesStudent');
+		
+		// 学科
+	    var url = this.getApplication().dataUrl + 'readSubjectList.php'
+	    var store = Ext.getStore('Subject');
 		store.removeAll();
 		store.clearFilter();
 		store.getProxy().url = url;
@@ -106,139 +85,80 @@ Ext.define('Youngshine.controller.One2one', {
 	        scope: this
 	    });
     },
-		
-    classesNew: function(button) {
-		var me = this;
-		me.classesnew = Ext.create('Youngshine.view.classes.New')
-		
-		// 清除暂存表格数据
-		me.classesnew.down('grid').getStore().removeAll() 
-    },
-	classesnewSave: function(obj,win){ //obj用户信息
-		var me = this;
-		Ext.MessageBox.show({
-		   msg: '正在保存',
-		   width: 300,
-		   wait: true,
-		   waitConfig: {interval:200},
-		});
+	
+	one2onestudyDelete: function(rec){
+		console.log(rec)
+		var me = this
 		Ext.Ajax.request({
-            url: this.getApplication().dataUrl + 'createClasses.php',
-            //callbackKey: 'callback',
-            params: obj,
-            success: function(response){
-				Ext.MessageBox.hide(); 
-				console.log(response.responseText)
-				var ret = Ext.JSON.decode(response.responseText)
+		    url: me.getApplication().dataUrl + 'deleteStudy.php',
+		    params: {
+				studentstudyID: rec.data.studentstudyID
+		    },
+		    success: function(response){
+				var ret = JSON.parse(response.responseText)
+				Ext.toast(ret.message,3000)
 				if(ret.success){
-					obj.classID = result.data.classID; // model数组添加项目
-					//obj.created = '刚刚刚刚'
-					Ext.getStore('Classes').insert(0,obj); //新增记录，排在最前面
-					win.close(); //成功保存才关闭窗口
-				}else{		
-					Ext.Msg.alert('提示',ret.message);
-				}	
-			},
-			failure: function(result){
-				Ext.MessageBox.hide();
-				Ext.Msg.alert('网络错误','服务请求失败');
-			}
-        });
-	},		
-    classesEdit: function(record) {
-		var me = this;
-		me.classesedit = Ext.create('Youngshine.view.classes.Edit') 
-		//Ext.widget('classes-edit');
-        me.classesedit.down('form').loadRecord(record); //binding data
-		
-		// 清除暂存表格数据
-		me.classesedit.down('grid').getStore().removeAll() 
-    },
-	classeseditSave: function(obj,oldWin){ //obj用户信息
-		var me = this;
-		Ext.MessageBox.show({
-		   msg: '正在保存...',
-		   width: 300,
-		   wait: true,
-		   waitConfig: {interval:200},
+					Ext.getStore('Study').remove(rec);
+				}		         
+		    }
 		});
-		Ext.Ajax.request({
-            url: this.getApplication().dataUrl + 'updateClasses.php',
-            //callbackKey: 'callback',
-            params: obj,
-            success: function(response){
-				Ext.MessageBox.hide();
-				console.log(response.responseText)
-				var ret = Ext.JSON.decode(response.responseText)
-				if(ret.success){
-					// 更新前端store
-					var model = oldWin.down('form').getRecord();
-					model.set(obj) 
-					
-					oldWin.close();
-				}else{	
-					Ext.Msg.alert('提示',ret.message);
-				}	
-			},
-			failure: function(result){
-				Ext.MessageBox.hide();
-				Ext.Msg.alert('网络错误','服务请求失败');
-			}
-        });
-	},
-	classesDelete: function(record){
-		var me = this;
-		Ext.MessageBox.show({
-		   msg: '正在删除...',
-		   width: 300,
-		   wait: true,
-		   waitConfig: {interval:200},
-		});
-		console.log(record)
-		Ext.Ajax.request({
-			// 删除服务端记录: 最好做个标记，别真正删除？或者过期的和定期的不能删除？
-			url: this.getApplication().dataUrl + 'deleteClasses.php',
-			//callbackKey: 'callback',
-			params: {"classID": record.data.classID },
-			success: function(response){
-				Ext.MessageBox.hide();
-				console.log(response.responseText)
-				var ret = Ext.JSON.decode(response.responseText)
-				if(ret.success){
-					var store = Ext.getStore('Classes'); //移除本地store记录
-					store.remove(record); //.removeAt(i); 
-				}else{
-					Ext.Msg.alert('提示',ret.message);
-				}
-			},
-			failure: function(){
-				Ext.MessageBox.hide();
-				Ext.Msg.alert('网络错误','服务请求失败');
-			}
-		});	
 	},
 	
-	// 移出学生（不是真正删除??，才能统计原来上课，用点名表）
-	classesstudentDelete: function( record,oldView )	{
+	zsdChoose: function( obj,oldView )	{
     	var me = this; 
+
+		Ext.data.JsonP.request({ 
+            url: me.getApplication().dataUrl +  'createStudy.php',
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+				//更新前端store，最新插入记录ID，才能删除修改
+				obj.studentstudyID = result.data.studentstudyID; 
+				// model数组添加项目
+				Ext.getStore('Study').insert(0,obj); //新增记录，排在最前面	
+            }
+		});
+	},
+
+	one2onestudyKcb: function(record,oldView){
+		var me = this;
+		me.one2onekcb = Ext.create('Youngshine.view.one2one.Kcb');
+		me.one2onekcb.down('form').loadRecord(record); //binding data
+		me.one2onekcb.parentRecord = record // 传递参数
+		me.one2onekcb.parentView = oldView 
+		//me.studykcb.down('list').getStore().removeAll(); //清除上课周期列表
+		// 上课周期列表数组，list.store
+		if(record.data.timely_list != ''){
+			var timely_list = record.data.timely_list.split(',')
+			console.log(timely_list)
+			var timely = [];
+			for (var i = 0; i < timely_list.length; i++) {
+				//timely.push( {"timely":timely_list[i]}  )
+				var w = timely_list[i].substr(0,2),
+					h = timely_list[i].substr(2,2),
+					m = timely_list[i].substr(5,2)
+				timely.push( {"w":w,"h":h,"m":m}  )
+			}
+			console.log(timely);
+			me.one2onekcb.down('grid').getStore().loadData(timely)
+		}
 		
+		// 任课教师
 		var obj = {
-			classstudentID: record.data.classstudentID, // unique删除
-			studentID: record.data.studentID,
-			classID: record.data.classID,
-			accntdetailID: record.data.accntdetailID //用于更改排班状态isClassed=0
-		};
-		console.log(obj)
-		
-		Ext.Ajax.request({
-            url: me.getApplication().dataUrl + 'deleteClassStudent.php',
-            params: obj,
-            success: function(response){
-				var ret = Ext.JSON.decode(response.responseText)	
-				Ext.toast('学生移出成功',3000)
-				// 消除本行
-				oldView.down('grid').getStore().remove(record)
-			},
-        });
-	},	
+			"schoolID": localStorage.schoolID
+		}		
+		var store = Ext.getStore('Teacher'); 
+		store.removeAll()
+		store.clearFilter() 
+		store.getProxy().url = me.getApplication().dataUrl + 
+			'readTeacherList.php?data=' + JSON.stringify(obj);
+		store.load({
+			callback: function(records, operation, success){
+			    if (success){
+				};
+			} 
+		})
+	},
 });

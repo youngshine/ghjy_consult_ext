@@ -114,15 +114,15 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 		console.log(record)
 		this.chooseItem(record)
 	},
-	// 和上面双击选中效果一样
+	// 选择确定，和上面双击选中效果一样
 	onSelection: function(rec){ 
 		var me = this;
 		this.chooseItem(rec);
 	},
-	
 	onSelectionChange: function(selModel, selections){
+		console.log(selections)
 		var btnChoose = this.down('button[action=choose]');
-		btnChoose.setDisabled(false)
+		btnChoose.setDisabled(selections==0)
 	},
 
 	chooseItem: function(record){

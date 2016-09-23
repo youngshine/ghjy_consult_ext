@@ -20,6 +20,6 @@ Ext.define('Youngshine.Application', {
 		'Schoolsub','Student','Consult','Teacher','Kclist',
 		'Accnt','AccntDetail',
 		'Classes','ClassesStudent',
-		'Study' //一对一
+		'Study','Zsd','Subject' //一对一
     ]
 });
