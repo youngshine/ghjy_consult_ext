@@ -8,7 +8,7 @@ Ext.define('Youngshine.view.accnt.New', {
 	resizable: false,
 	closable: false,
 	width: 600,
-	height: 600,
+	//height: 600,
 	//layout: 'vbox',
 	title : '新增缴费退费',
 
@@ -89,7 +89,7 @@ Ext.define('Youngshine.view.accnt.New', {
 	            { boxLabel: '刷卡', name: 'pay', inputValue: '2' },
 	            { boxLabel: '微信', name: 'pay', inputValue: '3' },
 				{ boxLabel: '支付宝', name: 'pay', inputValue: '3' }
-	        ]
+	        ],
 		},{
 			xtype: 'displayfield',
 			name: 'amount_ys',
@@ -121,7 +121,7 @@ Ext.define('Youngshine.view.accnt.New', {
 		}],
 	},{
 		xtype: 'grid',
-		height: 300,
+		height: 200,
 		tripeRows: true,
 		//allowDeselect: true,
 		//selType: 'cellmodel',
@@ -249,27 +249,29 @@ Ext.define('Youngshine.view.accnt.New', {
 		//console.log(JSON.stringify(jsonList));
 		//arrList = JSON.stringify(jsonList); 
 		arrList = JSON.stringify(arrList); //传递到后台，必须字符串
+		//arrList = arrList.join(',')
+
+		var obj = {
+			"studentName": studentName,
+			"studentID": studentID,
+			"wxID": wxID, //发微信模版通知消息
+			"accntType": accntType,
+			"accntDate": accntDate,
+			"payment": payment,
+			"amount": amount,
+			"amount_ys": amount_ys,
+			"amount_owe": amount_owe,
+			"note": note,	
+			"consultID_owe": consultID_owe,	//业绩归属
+			"arrList": arrList, // 报读的多个课程列表					
+			"consultID": localStorage.consultID, //当前登录的咨询师
+			"schoolsubID": localStorage.schoolsubID,
+			"schoolID": localStorage.schoolID,
+		};
+		console.log(obj);
 
 		Ext.Msg.confirm('询问','是否保存？',function(id){
 			if( id == "yes"){
-				var obj = {
-					"studentName": studentName,
-					"studentID": studentID,
-					"wxID": wxID, //发微信模版通知消息
-					"accntType": accntType,
-					"accntDate": accntDate,
-					"payment": payment,
-					"amount": amount,
-					"amount_ys": amount_ys,
-					"amount_owe": amount_owe,
-					"note": note,	
-					"consultID_owe": consultID_owe,	//业绩归属
-					"arrList": arrList, // 报读的多个课程列表					
-					"consultID": localStorage.consultID, //当前登录的咨询师
-					"schoolsubID": localStorage.schoolsubID,
-					"schoolID": localStorage.schoolID,
-				};
-				console.log(obj);
 				//me.close();
 				me.fireEvent('save',obj,me); //后台数据判断，才能关闭  本窗口win
 			}

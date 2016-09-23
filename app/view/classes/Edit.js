@@ -248,22 +248,23 @@ Ext.define('Youngshine.view.classes.Edit', {
 		//arrList = JSON.stringify(arrList); //传递到后台，必须字符串
 		arrList = arrList.join(',')
 		
+		var obj = {
+			"title": title,
+			"beginDate": beginDate,
+			"kclistID": kclistID,
+			"persons": persons,
+			"note": note,	
+			"timely_list": arrList,
+			"teacherID": teacherID,	
+			"teacherID_chief": teacherID_chief,						
+			"consultID": localStorage.consultID, //当前登录的咨询师
+			"schoolsubID": localStorage.schoolsubID, 
+			"classID": classID, // unique
+		};
+		console.log(obj);
+		
 		Ext.Msg.confirm('询问','确认修改保存？',function(id){
 			if( id == "yes"){
-				var obj = {
-					"title": title,
-					"beginDate": beginDate,
-					"kclistID": kclistID,
-					"persons": persons,
-					"note": note,	
-					"arrList": arrList,
-					"teacherID": teacherID,	
-					"teacherID_chief": teacherID_chief,						
-					"consultID": localStorage.consultID, //当前登录的咨询师
-					"schoolsubID": localStorage.schoolsubID, 
-					"classID": classID, // unique
-				};
-				console.log(obj);
 				//me.close();
 				me.fireEvent('save',obj,me); //后台数据判断，才能关闭  本窗口win
 				

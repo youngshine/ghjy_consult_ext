@@ -19,8 +19,8 @@ Ext.define('Youngshine.controller.Accnt', {
         this.control({
 			'accnt-list': {
 				addnew: this.accntNew,
-				//edit: this.accntEdit,
-				//del: this.accntDelete,
+				edit: this.accntEdit,
+				del: this.accntDelete,
 			},	
 			'accnt-new': {
 				save: this.accntnewSave,
@@ -145,6 +145,113 @@ Ext.define('Youngshine.controller.Accnt', {
 				}	*/		
 		    }
 		});
+	},
+	
+    accntEdit: function(record) {
+		var me = this; 
+		me.accntedit = Ext.create('Youngshine.view.accnt.Edit') 
+		//Ext.widget('classes-edit');
+        me.accntedit.down('form').loadRecord(record); //binding data
+		
+		// radio checked
+		var level = record.data.level_list.split(',')
+		radioSx = win.down('radiogroup[itemId=sx]').down('radio[inputValue='+level[0]+']')
+		if(radioSx) radioSx.setValue(true); //打勾checked
+		
+		// 缴费子表记录，临时表，不用store，用jsonp???
+		var obj = {
+			"accntID": record.data.accntID,
+		} 
+		console.log(obj)
+		Ext.data.JsonP.request({ 
+            url: Youngshine.app.getApplication().dataUrl +  
+				'readAccntDetailByAccnt.php',
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+				console.log(result)
+				var store = me.accntedit.down('grid').getStore()
+				store.loadData(result.data)	
+            }
+		});
+  
+        //var url = this.getApplication().dataUrl + 'readAccntDetailByAccnt.php?data=' + JSON.stringify(obj);
+		//var store = Ext.getStore('AccntDetail');
+		//var store = me.accntedit.down('grid').getStore()
+		/*store.removeAll();
+		//store.clearFilter();
+		store.getProxy().url = url;
+        store.load({
+            callback: function(records, operation, success) {
+				console.log(records);
+            },
+            scope: this
+        }); */
+    },
+	accnteditSave: function(obj,oldWin){ //obj用户信息
+		var me = this;
+		Ext.MessageBox.show({
+		   msg: '正在保存...',
+		   width: 300,
+		   wait: true,
+		   waitConfig: {interval:200},
+		});
+		Ext.Ajax.request({
+            url: this.getApplication().dataUrl + 'updateAccntDetail.php',
+            //callbackKey: 'callback',
+            params: obj,
+            success: function(response){
+				Ext.MessageBox.hide();
+				console.log(response.responseText)
+				var ret = Ext.JSON.decode(response.responseText)
+				if(ret.success){
+					// 更新前端store
+					var model = oldWin.down('form').getRecord();
+					model.set(obj) 
+					
+					oldWin.close();
+				}else{	
+					Ext.Msg.alert('提示',ret.message);
+				}	
+			},
+			failure: function(result){
+				Ext.MessageBox.hide();
+				Ext.Msg.alert('网络错误','服务请求失败');
+			}
+        });
+	},
+	accntDelete: function(record){
+		var me = this;
+		Ext.MessageBox.show({
+		   msg: '正在删除...',
+		   width: 300,
+		   wait: true,
+		   waitConfig: {interval:200},
+		});
+		console.log(record)
+		Ext.Ajax.request({
+			// 删除服务端记录: 最好做个标记，别真正删除？或者过期的和定期的不能删除？
+			url: this.getApplication().dataUrl + 'deleteAccnt.php',
+			//callbackKey: 'callback',
+			params: {"accntID": record.data.accntID },
+			success: function(response){
+				Ext.MessageBox.hide();
+				console.log(response.responseText)
+				var ret = Ext.JSON.decode(response.responseText)
+				if(ret.success){
+					var store = Ext.getStore('Accnt'); //移除本地store记录
+					store.remove(record); //.removeAt(i); 
+				}else{
+					Ext.Msg.alert('提示',ret.message);
+				}
+			},
+			failure: function(){
+				Ext.MessageBox.hide();
+				Ext.Msg.alert('网络错误','服务请求失败');
+			}
+		});	
 	},
 	
 	// 添加报读课程明细（大小班、一对一、退费）

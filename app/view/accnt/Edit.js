@@ -1,25 +1,29 @@
-Ext.define('Youngshine.view.student.Edit', {
+Ext.define('Youngshine.view.accnt.Edit', {
     extend: 'Ext.window.Window',
-    alias : 'widget.student-edit',
-	id: 'winStudentEdit',
+    alias : 'widget.accnt-edit',
+	id: 'winAccntEdit',
 	
     autoShow: true,
     modal: true,
 	resizable: false,
 	closable: false,
     //layout: 'fit',
-	width: 400,
+	width: 600,
 	//height: 300,
-	title : '修改学生资料',
+	title : '修改缴费资料',
 
-    fbar : ['->',{
+    fbar : [{
+    	text: '＋添加课程明细',
+		handler: function(btn){
+			btn.up('window').onAddrow();
+		}
+    },'->',{
 		text: '保存',
 		handler: function(btn){
 			btn.up('window').onSave();
 		}
 	},{
 		text: '取消',
-		//scope: this,
 		handler: function(btn){
 			btn.up('window').destroy();
 			//this.close();
@@ -35,134 +39,208 @@ Ext.define('Youngshine.view.student.Edit', {
 			anchor: '100%'
 		},
 		items: [{
+			xtype: 'radiogroup',
+	        fieldLabel: '缴费类型',
+			itemId: 'accntType',
+	        // Arrange radio buttons into two columns, distributed vertically
+	        columns: 4,
+	        //vertical: true,
+	        items: [
+	            { boxLabel: '大小班', name: 'wl', inputValue: '1' },
+	            { boxLabel: '一对一', name: 'wl', inputValue: '2' },
+	            { boxLabel: '退费退班', name: 'wl', inputValue: '3' }
+	        ],
+			disabled: true	
+		},{
 			xtype: 'textfield',
 			name : 'studentName',
-			fieldLabel: '姓名'
+			fieldLabel: '姓名',
+			readOnly: true,
+			emptyText: '选择全校学生',
+			listeners: {
+		        click: {
+		            element: 'el', 
+		            fn: function(e,opts){ 					
+						Ext.getCmp('winAccntNew').onStudent(e,opts)
+					},
+		        },	
+		    },
+			disabled: true
 		},{
-			xtype: 'combo',
-			name: 'gender',
-			store: {
-				fields: ['value'],
-				data : [
-					{"value":"男"},
-					{"value":"女"},
-				]
-			},
-			valueField: 'value',
-			displayField: 'value',
-			editable: false,
-			fieldLabel: '性别'
+			xtype: 'hiddenfield',
+			name : 'studentID',
+		},{	
+			xtype: 'hiddenfield',
+			name: 'wxID', //用于发模版消息
 		},{
 			xtype: 'datefield',
-            fieldLabel: '出生日期',
+            fieldLabel: '日期',
 			format: 'Y-m-d',
-            name: 'born',
+            name: 'accntDate',
             allowBlank: false,
+			value: new Date()	
 		},{
-			xtype: 'combo',
-			name: 'grade',
-			store: {
-				fields: ['value'],
-				data : [
-					{"value":"一年级"},
-					{"value":"二年级"},
-					{"value":"三年级"},
-					{"value":"四年级"},
-					{"value":"五年级"},
-					{"value":"六年级"},
-					{"value":"七年级"},
-					{"value":"八年级"},
-					{"value":"九年级"},
-				]
-			},
-			valueField: 'value',
-			displayField: 'value',
-			editable: false,
-			fieldLabel: '年级'	
+			xtype: 'radiogroup',
+	        fieldLabel: '付款方式',
+			itemId: 'payment',
+	        // Arrange radio buttons into two columns, distributed vertically
+	        //columns: 2,
+	        //vertical: true,
+	        items: [
+	            { boxLabel: '现金', name: 'pay', inputValue: '1' },
+	            { boxLabel: '刷卡', name: 'pay', inputValue: '2' },
+	            { boxLabel: '微信', name: 'pay', inputValue: '3' },
+				{ boxLabel: '支付宝', name: 'pay', inputValue: '3' }
+	        ],
+			disabled: true
 		},{
-			xtype: 'textfield',
-			name: 'phone',
-			fieldLabel: '电话',
+			xtype: 'displayfield',
+			name: 'amount_ys',
+			fieldLabel: '应收金额',
+			value: 0
 		},{
-			xtype: 'textfield',
-			name: 'addr',
-			fieldLabel: '住址',	
+			xtype: 'numberfield',
+			name: 'amount',
+			fieldLabel: '实收(元)',
+			value: 0
+		},{
+			xtype: 'numberfield',
+			name: 'amount_owe',
+			fieldLabel: '欠费(元)',
+			value: 0
 		},{
 			xtype: 'textfield',
 			name: 'note',
 			fieldLabel: '备注',		
 		},{
 			xtype: 'combo',
-			name: 'schoolsubID',
-			store: 'Schoolsub',
-			valueField: 'schoolsubID',
-			displayField: 'fullname',
+			// selectOnFocus: true, editable=true 结合
+			name: 'consultID_owe',
+			store: 'Consult',
+			valueField: 'consultID',
+			displayField: 'consultName',
 			editable: false,
-			fieldLabel: '所属分校区'
+			fieldLabel: '业绩归咨询',	
 			
 		},{			
 			xtype: 'hiddenfield',//修改的唯一id,隐藏
-			name: 'studentID',
+			name: 'accntID',	
+		}],
+			
+	},{
+		xtype: 'grid',
+		height: 200,
+		tripeRows: true,
+		//allowDeselect: true,
+		//selType: 'cellmodel',
+		//store: 'AccntDetail',
+		store: Ext.create('Ext.data.Store', {
+			fields: [
+	            {name: "title", type: "string"},
+	            {name: "kclistID"},
+				{name: "unitprice", defaultValue: 0}, // 0,不是大小班
+				{name: "hour", defaultValue: 0},
+				{name: "amount"},
+	        ],
+		}),
+		 
+	    columns: [{
+			xtype: 'rownumberer',
+		},{	
+			text: '报读课程',
+			flex: 1,
+			sortable: true,
+			menuDisabled: true,
+			dataIndex: 'title'
+		}, {
+			text: '单价',
+			width: 60,
+			menuDisabled: true,
+			dataIndex: 'unitprice',
+			align: 'right'
+		}, {
+			text: '课时',
+			width: 80,
+			menuDisabled: true,
+			dataIndex: 'hour',
+			align: 'center'
+		}, {
+			text: '金额(元)',
+			width: 80,
+			menuDisabled: true,
+			dataIndex: 'amount',
+			align: 'right'
+ 		},{	 
+ 			menuDisabled: true,
+ 			sortable: false,
+ 			xtype: 'actioncolumn',
+ 			width: 30,
+ 			items: [{
+ 				//iconCls: 'add',
+ 				icon: 'resources/images/my_delete_icon.png',
+ 				tooltip: '删除',
+ 				handler: function(grid, rowIndex, colIndex) {
+ 					grid.getSelectionModel().select(rowIndex); // 高亮
+ 					var rec = grid.getStore().getAt(rowIndex);
+ 					grid.up('window').onDelete(rec); 
+ 				}	
+ 			}]
 		}],
     }],
 	
 	onSave: function(){
 		var me = this;
-/*		
-		console.log(this.down('radiogroup[itemId=wl]').getChecked())
-		// 有无选中
-		var sx = this.down('radiogroup[itemId=sx]').getChecked()[0], 
-			wl = this.down('radiogroup[itemId=wl]').getChecked()[0],
-			hx = this.down('radiogroup[itemId=hx]').getChecked()[0];
-		sx = sx != null ? sx.inputValue : 0
-		wl = wl != null ? wl.inputValue : 0
-		hx = hx != null ? hx.inputValue : 0
-		// 拼接 成绩: 数组：数理化科学水平 1,1,3,2
-		var level_list = sx + ',' + wl + ',' + hx //+ ',' + science
-		console.log(level_list)
-*/		
-		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
-			gender = this.down('combo[name=gender]').getValue(),
-			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
-			born = this.down('datefield[name=born]').getValue(), 
-			grade = this.down('combo[name=grade]').getValue(),
-			phone = this.down('textfield[name=phone]').getValue().trim(),
-			addr = this.down('textfield[name=addr]').getValue().trim(),
-			//district = this.down('textfield[name=district]').getValue().trim(),
-			//school = this.down('textfield[name=school]').getValue().trim(),
-			note = this.down('textfield[name=note]').getValue().trim(),
-			schoolsubID = this.down('combo[name=schoolsubID]').getValue(),
-			studentID = this.down('hiddenfield[name=studentID]').getValue() // unique
-
-		if (studentName == ''){
-			Ext.Msg.alert('提示','姓名不能空白！');
-			return;
-		}
-		if (phone == ''){
-			Ext.Msg.alert('提示','电话不能空白！');
-			return;
-		}
 		
+		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
+			studentID = this.down('hiddenfield[name=studentID]').getValue().trim(),
+			wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
+			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
+			accntDate = this.down('datefield[name=accntDate]').getValue(), 
+			amount = this.down('numberfield[name=amount]').getValue(),
+			amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
+			amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
+			note = this.down('textfield[name=note]').getValue().trim(),
+			consultID_owe = this.down('combo[name=consultID_owe]').getValue()
+			accntID = this.down('hiddenfield[name=accntID]').getValue() // unique
+
+		var arrList = [] //,jsonList = {};
+		var store = me.down('grid').getStore()
+		store.each(function(rec,index){
+			arrList.push(rec.data)
+			//jsonList[index] = rec.data.kclistID 
+		})
+		if (arrList.length == 0){	
+			Ext.Msg.alert('提示','请添加课程明细！');
+			return;
+		}
+		//console.log(arrList);
+		//console.log(JSON.stringify(jsonList));
+		//arrList = JSON.stringify(jsonList); 
+		arrList = JSON.stringify(arrList); //传递到后台，必须字符串
+		//arrList = arrList.join(',')
+	
+		var obj = {
+			"studentName": studentName,
+			"studentID": studentID,
+			"wxID": wxID, //发微信模版通知消息
+			"accntType": accntType,
+			"accntDate": accntDate,
+			"payment": payment,
+			"amount": amount,
+			"amount_ys": amount_ys,
+			"amount_owe": amount_owe,
+			"note": note,	
+			"consultID_owe": consultID_owe,	//业绩归属
+			"arrList": arrList, // 报读的多个课程列表					
+			"consultID": localStorage.consultID, //当前登录的咨询师
+			"schoolsubID": localStorage.schoolsubID,
+			"schoolID": localStorage.schoolID,
+			"accntID": accntID //unique
+		};
+		console.log(obj);
 		
 		Ext.Msg.confirm('询问','确认修改保存？',function(id){
 			if( id == "yes"){
-				var obj = {
-					"studentName": studentName,
-					"gender": gender,
-					"born": born,
-					"phone": phone,
-					"addr": addr,
-					//"district": district,
-					"grade": grade,
-					//"school": school,
-					//"level_list": level_list,
-					"note": note,
-					"schoolsubID": schoolsubID,
-					"studentID": studentID, // unique
-					//"consultID": localStorage.consultID, 
-					//微信注册的，尚未分配咨询师 consultID=0 ??未归属不显示，等待校长归属
-				};
-				console.log(obj);
 				//me.close();
 				me.fireEvent('save',obj,me); //后台数据判断，才能关闭  本窗口win
 				
@@ -173,24 +251,39 @@ Ext.define('Youngshine.view.student.Edit', {
 		})
 	},
 	
-	// 查找选择所在省市县
-	onDistrict: function(e,input){
+	// 添加课程明晰
+	onAddrow: function(){
 		var me = this;
-
-		var win = Ext.create('Youngshine.view.student.District'); 
-		win.showAt(e.getXY())  
 		
-		// 带入参数：当前js textfield，返回值显示
-		win.input = input;
-		//win.down('treepanel').store = store;
+		// 有学生，才有退费
+		var studentName = this.down('textfield[name=studentName]').getValue().trim()
+		if (studentName == ''){
+			Ext.Msg.alert('提示','请先选择学生！');
+			return;
+		}
 		
-		/*
-		var loader = new Ext.ux.tree.XmlTreeLoader({
-			preloadChildren: true,//若为true，则loader在节点第一次访问时加载"children"的属性
-			clearOnLoad: false,//（可选）默认为true。在读取数据前移除已存在的节点
-			dataUrl:'resources/data/county.xml'
-		}),
-		console.log(loader);  */
-
+		// 有无选中
+		var radios = this.down('radiogroup[itemId=accntType]')
+		var radioChecked = radios.getChecked()[0]
+		if (!radioChecked){
+			Ext.Msg.alert('提示','请选择缴费类型！');
+			return;
+		}
+		var accntType = radioChecked.boxLabel
+		console.log(accntType)
+		radios.setDisabled(true) //添加，就不能再选择类型
+		
+		me.fireEvent('addrow',accntType,me); 
+	},
+	
+	// 删除
+	onDelete: function(record){
+		var me = this; console.log(record)
+		me.down('grid').getStore().remove(record); //store选择的排除，从 检测项目.. 
+		
+		var ys = me.down('displayfield[name=amount_ys]'),
+			ss = me.down('numberfield[name=amount]')
+		ys.setValue ( parseInt(ys.getValue()) - parseInt(record.data.amount) )
+		ss.setValue ( parseInt(ss.getValue()) - parseInt(record.data.amount) )
 	},
 });

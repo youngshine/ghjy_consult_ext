@@ -233,7 +233,7 @@ Ext.define('Youngshine.view.classes.New', {
 		if(teacherID_chief==null) teacherID_chief=0
 			
 		var arrList = [] //,jsonList = {};
-		var store = me.down('grid').getStore()
+		var store = me.down('grid').getStore(); // store dirty数据不准确！
 		store.each(function(rec,index){
 			var timely_list = rec.data.w + rec.data.h + ':' + rec.data.m
 			arrList.push(timely_list)
@@ -255,7 +255,7 @@ Ext.define('Youngshine.view.classes.New', {
 					"kclistID": kclistID,
 					"persons": persons,
 					"note": note,	
-					"arrList": arrList,
+					"timely_list": arrList,
 					"teacherID": teacherID,	
 					"teacherID_chief": teacherID_chief,						
 					"consultID": localStorage.consultID, //当前登录的咨询师
