@@ -61,7 +61,7 @@ Ext.define('Youngshine.view.one2one.Kcb', {
 			})
 		], 
 		xtype: 'grid',
-		height: 100,
+		height: 150,
 		tripeRows: true,
 		store: Ext.create('Ext.data.Store', {
 			fields: [

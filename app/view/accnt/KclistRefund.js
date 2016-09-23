@@ -1,4 +1,4 @@
-// 课程：大小班
+// 可以退费的课程
 Ext.define('Youngshine.view.accnt.KclistRefund' ,{ 
 	extend: 'Ext.window.Window',
     alias : 'widget.kclist',
@@ -61,11 +61,23 @@ Ext.define('Youngshine.view.accnt.KclistRefund' ,{
 	    },
 		
 		columns: [{
+			text: '何时购买的',
+			width: 80,
+			//sortable: false,
+			menuDisabled: true,
+			dataIndex: 'accntDate',
+		}, {			
 			text: '课程名称',
 			flex: 1,
 			sortable: true,
 			menuDisabled: true,
 			dataIndex: 'title'
+		}, {
+			text: '类型',
+			width: 60,
+			//sortable: false,
+			menuDisabled: true,
+			dataIndex: 'kcType',
 		}, {
 			text: '课时',
 			width: 40,
@@ -97,25 +109,6 @@ Ext.define('Youngshine.view.accnt.KclistRefund' ,{
 			} */
 		}     
 	}],
-
-	// 读取某个学科知识点
-	onFetch: function(val){
-        var store = Ext.getStore('Zsd');
-		store.removeAll();
-		store.clearFilter();
-		var obj = {
-			"subject": val
-		}
-		var url = Youngshine.getApplication().dataUrl + 
-			'readZsdList.php?data='+ JSON.stringify(obj); ;
-		store.getProxy().url = url;
-        store.load({
-            callback: function(records, operation, success) {
-				//console.log(records);
-            },
-            scope: this
-        }); // end store知识点
-	},
 	
 	onFilter: function(val){
 		var me = this;
@@ -142,6 +135,8 @@ Ext.define('Youngshine.view.accnt.KclistRefund' ,{
 			unitprice: record.data.unitprice, //单价大小班0
 			hour: record.data.hour, // 
 			amount: record.data.amount,
+			accntdetailID: record.data.accntdetailID, //退费更改状态isclass
+			kcType: record.data.kcType,
 		}
 		console.log(obj)
 		//me.fireEvent('choose',obj, me);

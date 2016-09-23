@@ -19,9 +19,11 @@ Ext.define('Youngshine.view.accnt.New', {
 		}
     },'->',{
 		text: '保存',
+		action: 'save',
 		handler: function(btn){
 			btn.up('window').onSave();
-		}
+		},
+		disabled: true
 	},{
 		text: '取消',
 		handler: function(btn){
@@ -49,7 +51,12 @@ Ext.define('Youngshine.view.accnt.New', {
 	            { boxLabel: '大小班', name: 'wl', inputValue: '1' },
 	            { boxLabel: '一对一', name: 'wl', inputValue: '2' },
 	            { boxLabel: '退费退班', name: 'wl', inputValue: '3' }
-	        ]	
+	        ],
+			listeners: {
+				change: function( field, newValue, oldValue, eOpts ){
+					field.up('window').down('button[action=save]').setDisabled(false)
+				}
+			}	
 		},{
 			xtype: 'textfield',
 			name : 'studentName',
@@ -133,6 +140,8 @@ Ext.define('Youngshine.view.accnt.New', {
 				{name: "unitprice", defaultValue: 0}, // 0,不是大小班
 				{name: "hour", defaultValue: 0},
 				{name: "amount"},
+				{name: "accntdetailID", defaultValue: 0}, //退费，退班用，更改他的状态
+				{name: "kcType"},
 	        ],
 		}),
 		 
@@ -208,7 +217,7 @@ Ext.define('Youngshine.view.accnt.New', {
 			Ext.Msg.alert('提示','请选择付款方式！');
 			return;
 		}
-		var payment = payment.boxLabel
+		payment = payment.boxLabel
 		console.log(payment)
 		
 		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
@@ -220,7 +229,8 @@ Ext.define('Youngshine.view.accnt.New', {
 			amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
 			amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
 			note = this.down('textfield[name=note]').getValue().trim(),
-			consultID_owe = this.down('combo[name=consultID_owe]').getValue()
+			consultID_owe = this.down('combo[name=consultID_owe]').getValue(),
+			consultName_owe = this.down('combo[name=consultID_owe]').getRawValue()
 		
 		if (studentName == ''){
 			Ext.Msg.alert('提示','姓名不能空白！');
@@ -263,6 +273,7 @@ Ext.define('Youngshine.view.accnt.New', {
 			"amount_owe": amount_owe,
 			"note": note,	
 			"consultID_owe": consultID_owe,	//业绩归属
+			"consultName_owe": consultName_owe, //前端显示
 			"arrList": arrList, // 报读的多个课程列表					
 			"consultID": localStorage.consultID, //当前登录的咨询师
 			"schoolsubID": localStorage.schoolsubID,
@@ -270,7 +281,7 @@ Ext.define('Youngshine.view.accnt.New', {
 		};
 		console.log(obj);
 
-		Ext.Msg.confirm('询问','是否保存？',function(id){
+		Ext.Msg.confirm('询问','缴费金额'+amount+'元。是否保存？',function(id){
 			if( id == "yes"){
 				//me.close();
 				me.fireEvent('save',obj,me); //后台数据判断，才能关闭  本窗口win

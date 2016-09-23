@@ -10,13 +10,14 @@ Ext.define('Youngshine.view.accnt.Edit', {
     //layout: 'fit',
 	width: 600,
 	//height: 300,
-	title : '修改缴费资料',
+	title : '修改缴费',
 
     fbar : [{
     	text: '＋添加课程明细',
 		handler: function(btn){
 			btn.up('window').onAddrow();
-		}
+		},
+		disabled: true
     },'->',{
 		text: '保存',
 		handler: function(btn){
@@ -78,7 +79,8 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			format: 'Y-m-d',
             name: 'accntDate',
             allowBlank: false,
-			value: new Date()	
+			//value: new Date()	
+			disabled: true
 		},{
 			xtype: 'radiogroup',
 	        fieldLabel: '付款方式',
@@ -102,12 +104,13 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			xtype: 'numberfield',
 			name: 'amount',
 			fieldLabel: '实收(元)',
-			value: 0
+			//value: 0,
+			disabled: true
 		},{
 			xtype: 'numberfield',
 			name: 'amount_owe',
 			fieldLabel: '欠费(元)',
-			value: 0
+			//value: 0
 		},{
 			xtype: 'textfield',
 			name: 'note',
@@ -129,6 +132,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			
 	},{
 		xtype: 'grid',
+		disabled: true,
 		height: 200,
 		tripeRows: true,
 		//allowDeselect: true,
@@ -191,18 +195,19 @@ Ext.define('Youngshine.view.accnt.Edit', {
 	onSave: function(){
 		var me = this;
 		
-		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
-			studentID = this.down('hiddenfield[name=studentID]').getValue().trim(),
-			wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
+		var //studentName = this.down('textfield[name=studentName]').getValue().trim(),
+			//studentID = this.down('hiddenfield[name=studentID]').getValue().trim(),
+			//wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
 			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
-			accntDate = this.down('datefield[name=accntDate]').getValue(), 
-			amount = this.down('numberfield[name=amount]').getValue(),
+			//accntDate = this.down('datefield[name=accntDate]').getValue(), 
+			//amount = this.down('numberfield[name=amount]').getValue(),
 			amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
-			amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
+			//amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
 			note = this.down('textfield[name=note]').getValue().trim(),
-			consultID_owe = this.down('combo[name=consultID_owe]').getValue()
+			consultID_owe = this.down('combo[name=consultID_owe]').getValue(),
+			consultName_owe = this.down('combo[name=consultID_owe]').getRawValue(),
 			accntID = this.down('hiddenfield[name=accntID]').getValue() // unique
-
+/*
 		var arrList = [] //,jsonList = {};
 		var store = me.down('grid').getStore()
 		store.each(function(rec,index){
@@ -218,23 +223,24 @@ Ext.define('Youngshine.view.accnt.Edit', {
 		//arrList = JSON.stringify(jsonList); 
 		arrList = JSON.stringify(arrList); //传递到后台，必须字符串
 		//arrList = arrList.join(',')
-	
+*/	
 		var obj = {
-			"studentName": studentName,
+			/*"studentName": studentName,
 			"studentID": studentID,
 			"wxID": wxID, //发微信模版通知消息
 			"accntType": accntType,
 			"accntDate": accntDate,
 			"payment": payment,
 			"amount": amount,
-			"amount_ys": amount_ys,
+			"amount_ys": amount_ys, */
 			"amount_owe": amount_owe,
 			"note": note,	
 			"consultID_owe": consultID_owe,	//业绩归属
-			"arrList": arrList, // 报读的多个课程列表					
-			"consultID": localStorage.consultID, //当前登录的咨询师
-			"schoolsubID": localStorage.schoolsubID,
-			"schoolID": localStorage.schoolID,
+			"consultName_owe": consultName_owe, //前端显示
+			//"arrList": arrList, // 报读的多个课程列表					
+			//"consultID": localStorage.consultID, //当前登录的咨询师
+			//"schoolsubID": localStorage.schoolsubID,
+			//"schoolID": localStorage.schoolID,
 			"accntID": accntID //unique
 		};
 		console.log(obj);

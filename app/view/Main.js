@@ -16,6 +16,7 @@ Ext.define('Youngshine.view.Main', {
     items: [{
         region: 'north',
 		xtype: 'container',
+		itemId: 'infoBar',
         //title: '导航菜单',
 		html: null,
         height: 30,

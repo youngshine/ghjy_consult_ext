@@ -55,18 +55,18 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 		store: 'Student',
 		columns: [{
 			text: '学生姓名',
-			width: 80,
+			width: 100,
 			menuDisabled: true,
 			dataIndex: 'studentName'
 		}, {
 			text: '性别',
-			width: 30,
+			width: 40,
 			//sortable: false,
 			menuDisabled: true,
 			dataIndex: 'gender'	 
 		}, {
 			text: '电话',
-			width: 80,
+			width: 100,
 			//sortable: false,
 			menuDisabled: true,
 			dataIndex: 'phone'	 
@@ -81,7 +81,7 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 			flex: 1,
 			//sortable: false,
 			menuDisabled: true,
-			dataIndex: 'fullname'		 
+			dataIndex: 'schoolsub'		 
 		}],
 		
 		listeners: {

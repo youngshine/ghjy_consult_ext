@@ -125,7 +125,8 @@ Ext.define('Youngshine.view.accnt.KclistOne2one', {
 			if(record.data.kclistID == val ){
 				//me.down('hiddenfield[itemId=title]').setValue(record.data.title)
 				me.down('displayfield[name=unitprice]').setValue(record.data.unitprice)
-				var amount = record.data.unitprice * me.down('displayfield[name=hour]').getValue()
+				var hour = me.down('numberfield[name=hour]').getValue()
+				var amount = record.data.unitprice * hour
 				me.down('displayfield[name=amount]').setValue(amount)
 				return false // 跳出循环
 			}

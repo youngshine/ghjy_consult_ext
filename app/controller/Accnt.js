@@ -25,7 +25,11 @@ Ext.define('Youngshine.controller.Accnt', {
 			'accnt-new': {
 				save: this.accntnewSave,
 				addrow: this.accntnewAddrow
-			},			
+			},	
+			'accnt-edit': {
+				save: this.accnteditSave,
+				//addrow: this.accntnewAddrow
+			},		
         });
     },
 
@@ -98,8 +102,7 @@ Ext.define('Youngshine.controller.Accnt', {
 				//obj.created = '刚刚';
 				Ext.getStore('Accnt').insert(0,obj)	
 				
-				Ext.Viewport.remove(me.accntnew,true)
-				Ext.Viewport.setActiveItem(me.accnt);
+				oldView.destroy()
 				
 				// 发送模版消息：电子收据
 				wxTpl(obj); 
@@ -113,11 +116,12 @@ Ext.define('Youngshine.controller.Accnt', {
 						accntDate  : person.accntDate,
 						amount     : person.amount,
 						amount_ys  : person.amount_ys,
-						school     : localStorage.schoolName
+						school     : localStorage.school
 					}
 					console.log(objWx)
 					Ext.Ajax.request({
-					    url: me.getApplication().dataUrl+'weixinJS_gongzhonghao/wx_msg_tpl_accnt.php',
+					    url: me.getApplication().dataUrl + 
+							'weixinJS_gongzhonghao/wx_msg_tpl_accnt.php',
 					    params: objWx,
 					    success: function(response){
 					        var text = response.responseText;

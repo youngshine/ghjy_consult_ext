@@ -1,6 +1,6 @@
 <?php
 /*
- * 8-1 要退费的记录（大小班，一对一）
+ * 8-1 要退费的记录（大小班，一对一）未排课才嫩退isClass=0
 */
 require_once 'db/response.php';
 require_once 'db/request.php';
@@ -15,12 +15,13 @@ require_once('db/database_connection.php');
 	$schoolID = $arr->schoolID;
 	//$accntType = $arr->accntType;
 	// isClassed=0 尚未排课状态
-	$sql = " SELECT a.kclistID,a.unitprice,a.hour,a.amount,
-	b.accntType,b.accntDate,b.studentID,c.kcType,c.kmType,c.title 
+	$sql = " SELECT a.accntdetailID,a.kclistID,a.unitprice,a.hour,a.amount,
+		b.accntType,b.accntDate,b.studentID,c.kcType,c.kmType,c.title 
 		From `ghjy_accnt_detail` a 
 		Join `ghjy_accnt` b On b.accntID=a.accntID 
 		Join `ghjy_kclist` c On a.kclistID=c.kclistID  
-		WHERE b.studentID = $studentID And a.isClassed=0 "; 
+		WHERE b.studentID = $studentID 
+			And b.accntType != '退费退班' And a.isClassed=0 "; 
 	$result = mysql_query($sql) 
 		or die("Invalid query: readAccntDetailList by refund " . mysql_error());
 

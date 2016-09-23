@@ -12,8 +12,11 @@ require_once('db/database_connection.php');
 
 	$schoolID = $arr->schoolID;
 	//group by student+zsd?，一个学生可以报读同样知识点？？
-	$query = " SELECT * from `ghjy_student`  
-		Where schoolID=$schoolID Order by created Desc ";
+	$query = " SELECT a.*,b.fullname AS schoolsub 
+		FROM `ghjy_student` a 
+		Join `ghjy_school_sub` b On a.schoolsubID=b.schoolsubID 
+		Where a.schoolID = $schoolID 
+		Order by a.created Desc ";
     
     $result = mysql_query($query) 
 		or die("Invalid query: readStudentList school" . mysql_error());

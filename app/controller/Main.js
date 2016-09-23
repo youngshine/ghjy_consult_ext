@@ -76,7 +76,7 @@ Ext.define('Youngshine.controller.Main', {
 	
 					// 跳转页面 main
 					me.main = Ext.create('Youngshine.view.Main');
-					me.main.down('container[region=north]').html = result.data.schoolName
+					me.main.down('container[itemId=infoBar]').html = result.data.schoolName
 					me.getMyviewport().add(me.main) // build
 					oldWin.close(); //成功后关闭当前窗口
                 }else{
