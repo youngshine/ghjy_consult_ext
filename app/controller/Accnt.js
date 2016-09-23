@@ -153,10 +153,33 @@ Ext.define('Youngshine.controller.Accnt', {
 		//Ext.widget('classes-edit');
         me.accntedit.down('form').loadRecord(record); //binding data
 		
-		// radio checked
-		var level = record.data.level_list.split(',')
-		radioSx = win.down('radiogroup[itemId=sx]').down('radio[inputValue='+level[0]+']')
-		if(radioSx) radioSx.setValue(true); //打勾checked
+		// radio 类型
+		var accntType = record.data.accntType
+		if(accntType=='大小班'){
+			accntType=1
+		}else if(accntType=='一对一'){
+			accntType=2
+		}else{
+			accntType=3
+		}
+		var radioAccntType = me.accntedit.down('radiogroup[itemId=accntType]')
+			.down('radio[inputValue='+accntType+']')
+		if(radioAccntType) radioAccntType.setValue(true); //打勾checked
+		
+		// radio 付款方式
+		var payment = record.data.payment
+		if(payment=='现金'){
+			payment=1
+		}else if(accntType=='刷卡'){
+			payment=2
+		}else if(accntType=='微信'){
+			payment=3
+		}else{
+			payment=4
+		}
+		var radioPayment = me.accntedit.down('radiogroup[itemId=payment]')
+			.down('radio[inputValue='+payment+']')
+		if(radioPayment) radioPayment.setValue(true); //打勾checked
 		
 		// 缴费子表记录，临时表，不用store，用jsonp???
 		var obj = {

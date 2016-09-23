@@ -90,7 +90,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
 	            { boxLabel: '现金', name: 'pay', inputValue: '1' },
 	            { boxLabel: '刷卡', name: 'pay', inputValue: '2' },
 	            { boxLabel: '微信', name: 'pay', inputValue: '3' },
-				{ boxLabel: '支付宝', name: 'pay', inputValue: '3' }
+				{ boxLabel: '支付宝', name: 'pay', inputValue: '4' }
 	        ],
 			disabled: true
 		},{
