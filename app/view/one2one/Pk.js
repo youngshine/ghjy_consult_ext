@@ -84,12 +84,24 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 			menuDisabled: true,
 			dataIndex: 'title'
 		},{	
+			text: '课时',
+			width: 40,
+			sortable: true,
+			menuDisabled: true,
+			dataIndex: 'hour',
+			align: 'center'
+		},{	
 			text: '学生姓名',
 			width: 100,
 			sortable: true,
 			menuDisabled: true,
 			dataIndex: 'studentName'
-			 
+		},{	
+			text: '购买日期',
+			width: 100,
+			sortable: true,
+			menuDisabled: true,
+			dataIndex: 'accntDate'			 
 		},{	 
 			menuDisabled: true,
 			sortable: false,

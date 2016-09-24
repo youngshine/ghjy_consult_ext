@@ -53,7 +53,7 @@ Ext.define('Youngshine.view.accnt.KclistOne2one', {
 			editable: false,
 			fieldLabel: '课程名称',
 			listeners: {
-				change( field, newValue, oldValue, eOpts ){
+				change: function( field, newValue, oldValue, eOpts ){
 					field.up('window').onKclistChange(newValue,field)
 				}
 			}
@@ -67,7 +67,7 @@ Ext.define('Youngshine.view.accnt.KclistOne2one', {
 			fieldLabel: '购买课时',
 			value: 0,
 			listeners: {
-				change( field, newValue, oldValue, eOpts ){
+				change: function( field, newValue, oldValue, eOpts ){
 					field.up('window').onHourChange(newValue,field)
 				}
 			}	
