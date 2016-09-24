@@ -132,7 +132,7 @@ Ext.define('Youngshine.view.classes.Pk' ,{
 
 	onClasses: function(rec){ 
 		if (rec.data.consultID != localStorage.consultID){
-			Ext.Msg.alert('提示','非班级创建人，不能修改！');
+			Ext.Msg.alert('提示','非班级创建人，不能分班！');
 			//return;
 		}
 		this.fireEvent('classes',rec);

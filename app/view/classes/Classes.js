@@ -113,7 +113,7 @@ Ext.define('Youngshine.view.classes.Classes' ,{
 					accntdetailID: me.parentRecord.data.accntdetailID //更改状态
 			    }
 				console.log(obj)
-				me.fireEvent('choose',obj,me);
+				me.fireEvent('choose',obj,me.parentRecord,me);
 			}
 		});
 		

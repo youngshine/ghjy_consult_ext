@@ -108,7 +108,7 @@ Ext.define('Youngshine.controller.Classes', {
 	// 待排课的报读课程，show跳转来自main controller
 	showPk: function(){
 		var me = this;
-		me.classes = Ext.create('Youngshine.view.classes.Pk')
+		me.classespk = Ext.create('Youngshine.view.classes.Pk')
 		//Ext.widget('student-list');
 
 		var obj = {
@@ -170,7 +170,7 @@ Ext.define('Youngshine.controller.Classes', {
 	        scope: this
 	    });
     },
-	classesclassesChoose: function(obj,oldView){
+	classesclassesChoose: function(obj,parentRecord,oldView){
 		var me = this;
 		Ext.data.JsonP.request({ 
             url: Youngshine.app.getApplication().dataUrl +  'createClassesStudent.php',
@@ -183,7 +183,7 @@ Ext.define('Youngshine.controller.Classes', {
 				oldView.destroy()
 				
 				// 原来待分班当前行消失
-				me.classespk.down('grid').getStore().remove(record)		
+				me.classespk.down('grid').getStore().remove(parentRecord)		
             }
 		});
 	},
