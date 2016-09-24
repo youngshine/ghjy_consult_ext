@@ -61,7 +61,7 @@ Ext.define('Youngshine.view.classes.Student' ,{
 			items: [{
 				//iconCls: 'add',
 				icon: 'resources/images/my_delete_icon.png',
-				tooltip: '转班退班',
+				tooltip: '退转班',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);

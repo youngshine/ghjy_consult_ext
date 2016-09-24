@@ -109,7 +109,7 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 			width: 30,
 			items: [{
 				//iconCls: 'add',
-				icon: 'resources/images/my_input_icon.png',
+				icon: 'resources/images/my_right_icon.png',
 				tooltip: '排课',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮当前选择行？？？不是自动？
@@ -120,7 +120,13 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 				}	
 			}]	
 
-	     }],     
+	    }],
+		
+		listeners: {
+			itemclick: function( grid, record, item, index, e, eOpts ){
+				grid.up('window').onStudy(record);
+			}
+		}       
 	}],
 
 	onStudy: function(rec){ 

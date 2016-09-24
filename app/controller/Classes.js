@@ -345,11 +345,11 @@ Ext.define('Youngshine.controller.Classes', {
 		console.log(obj)
 		
 		Ext.Ajax.request({
-            url: me.getApplication().dataUrl + 'deleteClassStudent.php',
+            url: me.getApplication().dataUrl + 'deleteClassesStudent.php',
             params: obj,
             success: function(response){
 				var ret = Ext.JSON.decode(response.responseText)	
-				Ext.toast('学生移出成功',3000)
+				Ext.Msg.alert('提示','学生成功移出到待分班！');
 				// 消除本行
 				oldView.down('grid').getStore().remove(record)
 			},

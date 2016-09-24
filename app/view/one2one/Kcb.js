@@ -218,7 +218,10 @@ Ext.define('Youngshine.view.one2one.Kcb', {
 	// 添加上课时间记录
 	onAddrow: function(){
 		var me = this;	
-		me.down('grid').getStore().add({w:'周日',h:'08','m':'00'});
+		me.down('grid').getSelectionModel().deselectAll();
+		//me.down('grid').getStore().add({w:'周日',h:'08','m':'00'});
+		me.down('grid').getStore().insert(0,{w:'周日',h:'08','m':'00'});
+		me.down('grid').getSelectionModel().select(0);
 		//me.down('grid').getStore().add({w:'周日'},{h:'08'});
 		//me.fireEvent('addrow',me); 
 	},

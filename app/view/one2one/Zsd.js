@@ -97,18 +97,18 @@ Ext.define('Youngshine.view.one2one.Zsd' ,{
 			menuDisabled: true,
 			dataIndex: 'zsdName'
 		}, {
-			text: '年级',
-			width: 60,
-			//sortable: false,
-			menuDisabled: true,
-			dataIndex: 'gradeName'	
-		}, {
 			text: '课时',
 			width: 40,
 			//sortable: false,
 			menuDisabled: true,
 			dataIndex: 'times',
-			align: 'right' 		 
+			align: 'center' 
+		}, {
+			text: '年级',
+			width: 60,
+			//sortable: false,
+			menuDisabled: true,
+			dataIndex: 'gradeName'			 
 		}],
 		
 		listeners: {

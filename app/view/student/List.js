@@ -109,6 +109,12 @@ Ext.define('Youngshine.view.student.List' ,{
 			 menuDisabled: true,
 	         dataIndex: 'studentName'
 	     }, {
+	         text: '手机',
+	         width: 100,
+	         //sortable: false,
+			 menuDisabled: true,
+	         dataIndex: 'phone'	
+	     }, {
 	         text: '性别',
 	         width: 30,
 			 menuDisabled: true,
@@ -124,12 +130,6 @@ Ext.define('Youngshine.view.student.List' ,{
 	         //sortable: false,
 			 menuDisabled: true,
 	         dataIndex: 'grade'	 
-	     }, {
-	         text: '电话',
-	         width: 100,
-	         //sortable: false,
-			 menuDisabled: true,
-	         dataIndex: 'phone'	
 	     }, {
 	         text: '住址',
 	         width: 100,
@@ -151,6 +151,53 @@ Ext.define('Youngshine.view.student.List' ,{
                  return '<span style="color:' + '#73b51e' + ';">' + val.substr(2,8) + '</span>';
                  //return val;
              }, 
+			
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_qrcode_icon.png',
+				tooltip: '扫码绑定',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onQrcode(rec); 
+				}	
+			}]	
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_pay_icon.png',
+				tooltip: '购买明细',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onPrepaid(rec); 
+				}	
+			}]
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_chat_icon.png',
+				tooltip: '沟通记录',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onFollowup(rec); 
+				}	
+			}]	 
+			
 		},{	 
 			menuDisabled: true,
 			sortable: false,
@@ -182,68 +229,7 @@ Ext.define('Youngshine.view.student.List' ,{
 					var rec = grid.getStore().getAt(rowIndex);
 					grid.up('window').onDelete(rec); 
 				}	
-			}]	
-			
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_input_icon.png',
-				tooltip: '测评记录',
-				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮
-					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onAssess(rec); 
-				}	
-			}]	
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_pay_icon.png',
-				tooltip: '购买明细',
-				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮
-					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onPrepaid(rec); 
-				}	
-			}]
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_zsd_icon.png',
-				tooltip: '课程内容',
-				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮
-					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onStudyhist(rec); 
-				}	
-			}]	
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_chat_icon.png',
-				tooltip: '沟通记录',
-				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮
-					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onFollowup(rec); 
-				}	
-			}]	 		 
+			}]			 
 	     }],     
 	}],
 	
@@ -276,9 +262,27 @@ Ext.define('Youngshine.view.student.List' ,{
 	onPrepaid: function(rec){ 
 		this.fireEvent('prepaid',rec);
 	},
-	// 测评
-	onAssess: function(rec){ 
-		this.fireEvent('assess',rec);
+	
+	// qrcode
+	onQrcode: function(record){ 
+		//this.fireEvent('qrcode',record);
+		Ext.Ajax.request({
+		    url: 'script/weixinJS_gongzhonghao/wx_qrcode.php',
+		    params: {
+				studentID: record.data.studentID
+		    },
+		    success: function(response){
+				var ret = JSON.parse(response.responseText)
+				console.log(ret)
+				
+				Ext.Msg.show({
+				     title: '微信扫描二维码绑定账号',
+				     msg: '<img height=220 src=' + ret.img + ' />',
+				     buttons: Ext.Msg.OK,
+				     //icon: Ext.Msg.QUESTION
+				});
+		    }
+		});	
 	},
 	
 	onFilter: function(grade,studentName){

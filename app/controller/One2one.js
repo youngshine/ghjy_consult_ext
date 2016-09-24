@@ -3,11 +3,14 @@ Ext.define('Youngshine.controller.One2one', {
     extend: 'Ext.app.Controller',
 	
     refs: [{
+		ref: 'one2onepk',
+		selector: 'one2one-pk'
+	},{
 		ref: 'one2onestudy',
 		selector: 'one2one-study'	
 	},{
-		ref: 'one2onepk',
-		selector: 'one2one-pk'
+		ref: 'one2onekcb',
+		selector: 'one2one-kcb'	
 	}],
 
     init: function() {
@@ -22,7 +25,10 @@ Ext.define('Youngshine.controller.One2one', {
             },
 			'zsd': {
 				choose: this.zsdChoose
-			}					
+			},
+			'one2one-kcb': {
+                save: this.one2onekcbSave
+            },					
         });
     },
 	
@@ -160,5 +166,19 @@ Ext.define('Youngshine.controller.One2one', {
 				};
 			} 
 		})
+	},
+	
+	one2onekcbSave: function( obj,oldView )	{
+    	var me = this; 
+		console.log(obj)
+		Ext.Ajax.request({
+		    url: me.getApplication().dataUrl + 'updateStudyByKcb.php',
+		    params: obj,
+		    success: function(response){
+		        //var text = response.responseText; Ext.JSON.decode JSON.parse()
+				console.log(response)
+				oldView.destroy()
+		    }
+		});
 	},
 });

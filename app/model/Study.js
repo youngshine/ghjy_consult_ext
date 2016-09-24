@@ -6,11 +6,13 @@ Ext.define('Youngshine.model.Study', {
 		{name: 'studentstudyID'}, 
 		{name: 'studentID'}, // 学生
 		{name: 'studentName'},
+		
 		{name: 'zsdID'}, // 补习知识点
 		{name: 'zsdName'}, // 知识点名称，前端显示用
 		{name: 'subjectID'}, // 学科
 		{name: 'subjectName'}, // 学科名称
-		{name: 'gradeName'}, //关联表的字段名称
+		{name: 'gradeName'}, //关联表的字段名称	
+		{name: 'times'},//课时
 	
 		{name: 'teacherID'}, 
 		{name: 'teacherName'}, 

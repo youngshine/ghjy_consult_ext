@@ -216,6 +216,8 @@ Ext.define('Youngshine.view.classes.Edit', {
 			note = this.down('textfield[name=note]').getValue().trim(),
 			teacherID = this.down('combo[name=teacherID]').getValue(),
 			teacherID_chief = this.down('combo[name=teacherID_chief]').getValue(),
+			teacherName = this.down('combo[name=teacherID]').getRawValue(), //前端显示
+			teacherName_chief = this.down('combo[name=teacherID_chief]').getRawValue(),
 			classID = this.down('hiddenfield[name=classID]').getValue() //unique
 		
 		if (title == ''){
@@ -256,7 +258,9 @@ Ext.define('Youngshine.view.classes.Edit', {
 			"note": note,	
 			"timely_list": arrList,
 			"teacherID": teacherID,	
-			"teacherID_chief": teacherID_chief,						
+			"teacherID_chief": teacherID_chief,	
+			"teacherName": teacherName, //前端显示	
+			"teacherName_chief": teacherName_chief,						
 			"consultID": localStorage.consultID, //当前登录的咨询师
 			"schoolsubID": localStorage.schoolsubID, 
 			"classID": classID, // unique
@@ -278,7 +282,10 @@ Ext.define('Youngshine.view.classes.Edit', {
 	// 添加上课时间记录
 	onAddrow: function(){
 		var me = this;	
-		me.down('grid').getStore().add({w:'周日',h:'08','m':'00'});
+		me.down('grid').getSelectionModel().deselectAll();
+		//me.down('grid').getStore().add({w:'周日',h:'08','m':'00'});
+		me.down('grid').getStore().insert(0,{w:'周日',h:'08','m':'00'});
+		me.down('grid').getSelectionModel().select(0);
 		//me.down('grid').getStore().add({w:'周日'},{h:'08'});
 		//me.fireEvent('addrow',me); 
 	},

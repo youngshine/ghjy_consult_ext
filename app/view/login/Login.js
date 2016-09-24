@@ -17,7 +17,7 @@ Ext.define('Youngshine.view.login.Login', {
     //autoScroll:true,
     width: 350,
 	
-	title: '根号数理化－咨询PC端',
+	title: '根号教育－咨询PC端',
 
     items: [{
         xtype: 'image',

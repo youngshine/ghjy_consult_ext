@@ -17,12 +17,12 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 
 	fbar: [{
 		xtype: 'button',
-		text: '＋添加',
-		tooltip: '添加知识点',
+		text: '＋报读知识点',
+		tooltip: '添加',
 		action: 'addnew',
 		//disabled: true,
 		//scale: 'medium',
-		width: 55,
+		//width: 55,
 		handler: function(btn,e){
 			btn.up('window').onAddrow(e); //onAdd是系统保留reserved word
 		}	
@@ -84,13 +84,13 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 			 align: 'center' 
 	     }, {
 	         text: '上课时间',
-	         width: 100,
+	         width: 120,
 	         //sortable: false,
 			 menuDisabled: true,
 	         dataIndex: 'timely_list'	 
 	     }, {
 	         text: '教师',
-	         width: 60,
+	         width: 80,
 			 menuDisabled: true,
 	         dataIndex: 'teacherName'	
 
