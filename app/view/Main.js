@@ -20,7 +20,7 @@ Ext.define('Youngshine.view.Main', {
         //title: '导航菜单',
 		html: null,
         height: 30,
-		padding: '5 10',
+		padding: '5 0 5 5',
 		style: {
 			backgroundColor: '#333', 
 			color: '#ccc',                

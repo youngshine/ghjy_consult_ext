@@ -8,7 +8,7 @@ Ext.define('Youngshine.view.classes.Classes' ,{
 	modal: true,
     autoShow: true,
 	resizable: false,
-	width: 700,
+	width: 650,
 	height: 350,
 	//maximizable: true,
 	//maximized: true,
@@ -77,7 +77,7 @@ Ext.define('Youngshine.view.classes.Classes' ,{
 			dataIndex: 'teacherName'
 		},{	
 			text: '分校区',
-			width: 100,
+			width: 120,
 			sortable: true,
 			menuDisabled: true,
 			dataIndex: 'fullname'

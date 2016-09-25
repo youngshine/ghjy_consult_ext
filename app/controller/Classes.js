@@ -102,7 +102,24 @@ Ext.define('Youngshine.controller.Classes', {
 				console.log(records);
 	        },
 	        scope: this
-	    });		
+	    });	
+		
+		// 分校区
+		var obj = {
+			"schoolID": localStorage.getItem('schoolID')
+		}
+        var url = this.getApplication().dataUrl + 
+			'readSchoolsubList.php?data=' + JSON.stringify(obj);
+        var store = Ext.getStore('Schoolsub');
+		store.removeAll();
+		store.clearFilter();
+		store.getProxy().url = url;
+        store.load({
+            callback: function(records, operation, success) {
+				console.log(records);
+            },
+            scope: this
+        });	
 	},	
 	
 	// 待排课的报读课程，show跳转来自main controller

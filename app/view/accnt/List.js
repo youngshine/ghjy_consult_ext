@@ -94,16 +94,22 @@ Ext.define('Youngshine.view.accnt.List' ,{
 			xtype: 'rownumberer',
 			width: 35
 		},{	
-			 text: '学生姓名',
-			 width: 80,
+			 text: '单据号',
+			 width: 60,
 	         sortable: true,
 			 menuDisabled: true,
-	         dataIndex: 'studentName'
+	         dataIndex: 'accntID'
 	     }, {
-	         text: '日期',
+	         text: '缴费日期',
 	         width: 80,
 			 menuDisabled: true,
 	         dataIndex: 'accntDate'
+ 		},{	
+ 			 text: '学生',
+ 			 width: 80,
+ 	         sortable: true,
+ 			 menuDisabled: true,
+ 	         dataIndex: 'studentName'
 	     }, {
 	         text: '类型',
 	         width: 60,
@@ -143,8 +149,8 @@ Ext.define('Youngshine.view.accnt.List' ,{
 		         return value;
 		     }
 	     }, {
-	         text: '业绩归属咨询师',
-	         width: 100,
+	         text: '归属咨询师',
+	         width: 80,
 			 menuDisabled: true,
 	         dataIndex: 'consultName_owe',	
 	     }, {
@@ -224,22 +230,36 @@ Ext.define('Youngshine.view.accnt.List' ,{
 		});
 	},
 
-	// 咨询师与学生沟通记录
-	onFollowup: function(rec){ 
-		this.fireEvent('followup',rec);
+	// 缴费单的子表（课程明细）
+	onDetail: function(record){ 
+		var obj = {
+			"accntID": record.data.accntID,
+		} 
+		Ext.data.JsonP.request({ 
+            url: Youngshine.app.getApplication().dataUrl +  
+				'readAccntDetailByAccnt.php',
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+				console.log(result)
+				var kclist = []
+				Ext.Array.each(result.data, function(name, index, countriesItSelf) {
+				    console.log(name);
+					kclist.push(name.title)
+				});
+				console.log(kclist)
+				kclist = kclist.join("、")
+				Ext.Msg.show({
+				     title: '购买课程明细',
+				     msg: kclist,
+				     buttons: Ext.Msg.OK,
+				     //icon: Ext.Msg.QUESTION
+				});
+            }
+		});
 	},	
-	// 报读历史记录，不可编辑
-	onStudyhist: function(rec){ 
-		this.fireEvent('studyhist',rec);
-	},
-	// 缴费明细
-	onPrepaid: function(rec){ 
-		this.fireEvent('prepaid',rec);
-	},
-	// 测评
-	onAssess: function(rec){ 
-		this.fireEvent('assess',rec);
-	},
 	
 	onFilter: function(accntType,studentName){
 		var me = this;

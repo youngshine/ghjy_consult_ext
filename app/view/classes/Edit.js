@@ -78,6 +78,7 @@ Ext.define('Youngshine.view.classes.Edit', {
 		},{
 			xtype: 'combo',
 			name: 'teacherID_chief',
+			queryMode: 'local',
 			store: 'Teacher',
 			valueField: 'teacherID',
 			displayField: 'teacherName',

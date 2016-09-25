@@ -30,7 +30,7 @@ Ext.define('Youngshine.view.login.Pswreset', {
 			xtype: 'displayfield',
 			//value: localStorage.getItem('admin_name'),
 			name: 'schoolsub',
-			fieldLabel: '分校区',
+			fieldLabel: '所在分校区',
 		},{	
 			xtype: 'textfield',
 			name : 'psw1',

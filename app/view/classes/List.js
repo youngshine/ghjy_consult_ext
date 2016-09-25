@@ -15,40 +15,20 @@ Ext.define('Youngshine.view.classes.List' ,{
 
     title : '大小班级',
 
-	fbar: [{
-		xtype: 'textfield',
-		itemId : 'search',
-		width: 100,
-		//fieldLabel: '筛选',
-		//labelWidth: 30,
-		//labelAlign: 'right',
-		emptyText: '搜索...',
-		enableKeyEvents: true,
-		listeners: {
-			keypress: function(field,e){
-				console.log(e.getKey())
-				if(e.getKey()=='13'){ //按Enter
-					var studentName = field.value,
-						accntType = field.up('window').down('combo[itemId=accntType]').getValue();
-					field.up('window').onFilter(accntType,studentName); 
-				}	
-			}
-		}
-	},{		
+	fbar: [{	
 		xtype: 'combo',
-		width: 100,
+		width: 200,
 		itemId: 'schoolsub',
 		store: 'Schoolsub',
 		valueField: 'schoolsubID',
-		displayField: 'schoolsubName',
+		displayField: 'fullname',
+		emptyText: '分校区',
 		//value: '全部年级',
-		//editable: false,
+		editable: false,
 		//padding: '5 0',
 		listeners: {
 			change: function(cb,newValue){
-				var accntType = newValue,
-					studentName = this.up('window').down('textfield[itemId=search]').getValue().trim();
-				this.up('window').onFilter(accntType,studentName); 
+				this.up('window').onFilter(newValue); 
 			}
 		}
 
@@ -219,17 +199,10 @@ Ext.define('Youngshine.view.classes.List' ,{
 		});
 	},
 	
-	onFilter: function(accntType,studentName){
+	onFilter: function(val){
 		var me = this;
-		var studentName = new RegExp("/*" + studentName); // 正则表达式
 		var store = this.down('grid').getStore();
 		store.clearFilter(); // filter is additive
-		if(accntType != '' )
-			store.filter([
-				{property: "accntType", value: accntType},
-				{property: "studentName", value: studentName}, // 姓名模糊查找？？
-			]);
-		if(accntType == '' )
-			store.filter("studentName", studentName);
+		store.filter("schoolsubID", val);
 	}
 });

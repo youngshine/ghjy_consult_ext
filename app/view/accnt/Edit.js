@@ -124,6 +124,10 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			displayField: 'consultName',
 			editable: false,
 			fieldLabel: '业绩归咨询',	
+			listConfig: {
+                itemTpl: '{consultName} - {schoolsub}'
+            },	
+			queryMode: 'local'
 			
 		},{			
 			xtype: 'hiddenfield',//修改的唯一id,隐藏

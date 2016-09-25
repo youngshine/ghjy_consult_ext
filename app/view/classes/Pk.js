@@ -30,26 +30,26 @@ Ext.define('Youngshine.view.classes.Pk' ,{
 				console.log(e.getKey())
 				if(e.getKey()=='13'){ //按Enter
 					var studentName = field.value,
-						accntType = field.up('window').down('combo[itemId=accntType]').getValue();
-					field.up('window').onFilter(accntType,studentName); 
+						kclistID = field.up('window').down('combo[itemId=kclist]').getValue();
+					field.up('window').onFilter(kclistID,studentName); 
 				}	
 			}
 		}
 	},{		
 		xtype: 'combo',
-		width: 100,
-		itemId: 'schoolsub',
-		store: 'Schoolsub',
-		valueField: 'schoolsubID',
-		displayField: 'schoolsubName',
-		//value: '全部年级',
-		//editable: false,
+		width: 150,
+		itemId: 'kclist',
+		store: 'Kclist',
+		valueField: 'kclistID',
+		displayField: 'title',
+		emptyText: '课程',
+		editable: false,
 		//padding: '5 0',
 		listeners: {
 			change: function(cb,newValue){
-				var accntType = newValue,
+				var kclistID = newValue,
 					studentName = this.up('window').down('textfield[itemId=search]').getValue().trim();
-				this.up('window').onFilter(accntType,studentName); 
+				this.up('window').onFilter(kclistID,studentName); 
 			}
 		}
 
@@ -78,6 +78,12 @@ Ext.define('Youngshine.view.classes.Pk' ,{
 			xtype: 'rownumberer',
 			width: 35
 		}, {
+			text: '学生姓名',
+			width: 100,
+			sortable: true,
+			menuDisabled: true,
+			dataIndex: 'studentName'
+		},{	
 			text: '课程名称',
 			flex: 1,
 			//sortable: false,
@@ -90,12 +96,6 @@ Ext.define('Youngshine.view.classes.Pk' ,{
 			menuDisabled: true,
 			dataIndex: 'hour',
 			align: 'center'
-		},{	
-			text: '学生姓名',
-			width: 100,
-			sortable: true,
-			menuDisabled: true,
-			dataIndex: 'studentName'
 		},{	
 			text: '购买日期',
 			width: 100,
@@ -138,17 +138,17 @@ Ext.define('Youngshine.view.classes.Pk' ,{
 		this.fireEvent('classes',rec);
 	},
 	
-	onFilter: function(accntType,studentName){
+	onFilter: function(kclistID,studentName){
 		var me = this;
 		var studentName = new RegExp("/*" + studentName); // 正则表达式
 		var store = this.down('grid').getStore();
 		store.clearFilter(); // filter is additive
-		if(accntType != '' )
+		if(kclistID != null )
 			store.filter([
-				{property: "accntType", value: accntType},
+				{property: "kclistID", value: kclistID},
 				{property: "studentName", value: studentName}, // 姓名模糊查找？？
 			]);
-		if(accntType == '' )
+		if(kclistID == null )
 			store.filter("studentName", studentName);
 	}
 });

@@ -191,7 +191,7 @@ Ext.define('Youngshine.controller.Accnt', {
 		} 
 		console.log(obj)
 		Ext.data.JsonP.request({ 
-            url: Youngshine.app.getApplication().dataUrl +  
+            url: me.getApplication().dataUrl +  
 				'readAccntDetailByAccnt.php',
             callbackKey: 'callback',
             params:{

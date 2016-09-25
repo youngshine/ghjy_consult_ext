@@ -12,7 +12,8 @@ Ext.define('Youngshine.model.Accnt', {
 		{name: 'amount_ys'}, //应收
 		{name: 'amount_owe'}, //当天欠费，可以补交
 
-		//{name: 'created'},
+		{name: 'created'},
+		
 		{name: 'studentID'}, // 学生
 		{name: 'studentName'},
 		

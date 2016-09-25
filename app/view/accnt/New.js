@@ -124,7 +124,11 @@ Ext.define('Youngshine.view.accnt.New', {
 			valueField: 'consultID',
 			displayField: 'consultName',
 			editable: false,
-			fieldLabel: '业绩归咨询',			
+			fieldLabel: '业绩归咨询',	
+			listConfig: {
+                itemTpl: '{consultName} - {schoolsub}'
+            },	
+			queryMode: 'local'	
 		}],
 	},{
 		xtype: 'grid',
