@@ -102,7 +102,7 @@ Ext.define('Youngshine.controller.One2one', {
 		    },
 		    success: function(response){
 				var ret = JSON.parse(response.responseText)
-				Ext.toast(ret.message,3000)
+				//Ext.toast(ret.message,3000)
 				if(ret.success){
 					Ext.getStore('Study').remove(rec);
 				}		         

@@ -20,6 +20,7 @@ $phone = addslashes($arr->phone);
 $addr = $is_magic_gpc ? $arr->addr : addslashes($arr->addr);
 $note = addslashes($arr->note);
 $schoolsubID = $arr->schoolsubID;
+$schoolID = $arr->schoolID;
 	
 	//$level_list = addslashes($arr->level_list); //数组字符
 	//$student->email = ''; //addslashes($arr->email);
@@ -40,9 +41,9 @@ $consultID = isset($arr->consultID) ? $arr->consultID : 0 ; //当前咨询师，
 	//$birthday = date('Y-m-d H:i:s',strtotime($user->Birthday));
 	//echo $birthday;
 	$query = "INSERT INTO `ghjy_student`
-		(studentName,gender,born,phone,addr,grade,note,schoolsubID,consultID) 
+		(studentName,gender,born,phone,addr,grade,note,schoolsubID,schoolID,consultID) 
 	 VALUES ('$studentName', '$gender', '$born','$phone', 
-		 '$addr','$grade', '$note',$schoolsubID, $consultID)";
+		 '$addr','$grade', '$note',$schoolsubID,$schoolID, $consultID)";
 
 //$result = mysql_query($query) or die("Invalid query: createStudent" . mysql_error());
 	$result = mysql_query($query);

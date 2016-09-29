@@ -908,13 +908,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.view.one2one.Pk": [],
   "Youngshine.view.one2one.Study": [],
   "Youngshine.view.one2one.Zsd": [],
+  "Youngshine.view.student.Accnt": [],
   "Youngshine.view.student.District": [],
   "Youngshine.view.student.Edit": [],
   "Youngshine.view.student.Find": [],
   "Youngshine.view.student.Followup": [],
   "Youngshine.view.student.List": [],
   "Youngshine.view.student.New": [],
-  "Youngshine.view.student.Prepaid": [],
   "Youngshine.view.student.Study": [],
   "Youngshine.view.study.Kcb": [],
   "Youngshine.view.study.List": [],
@@ -2056,6 +2056,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.view.one2one.Zsd": [
     "widget.zsd"
   ],
+  "Youngshine.view.student.Accnt": [
+    "widget.student-accnt"
+  ],
   "Youngshine.view.student.District": [
     "widget.district"
   ],
@@ -2073,9 +2076,6 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Youngshine.view.student.New": [
     "widget.student-new"
-  ],
-  "Youngshine.view.student.Prepaid": [
-    "widget.student-prepaid"
   ],
   "Youngshine.view.student.Study": [
     "widget.student-study"

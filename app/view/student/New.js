@@ -78,6 +78,7 @@ Ext.define('Youngshine.view.student.New', {
 			store: {
 				fields: ['value'],
 				data : [
+					{"value":"幼儿园"},
 					{"value":"一年级"},
 					{"value":"二年级"},
 					{"value":"三年级"},
@@ -87,6 +88,9 @@ Ext.define('Youngshine.view.student.New', {
 					{"value":"七年级"},
 					{"value":"八年级"},
 					{"value":"九年级"},
+					{"value":"高一年"},
+					{"value":"高二年"},
+					{"value":"高三年"},
 				]
 			},
 			valueField: 'value',
@@ -223,7 +227,8 @@ Ext.define('Youngshine.view.student.New', {
 						"addr": addr,
 						//"district": district,
 						"note": note,	
-						"schoolsubID": schoolsubID,						
+						"schoolsubID": schoolsubID,	
+						"schoolID": localStorage.schoolID,							
 						"consultID": localStorage.consultID, //当前登录的咨询师
 					};
 					console.log(obj);

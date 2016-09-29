@@ -339,7 +339,24 @@ Ext.define('Youngshine.view.accnt.New', {
 		//win.show()
 		// 带入参数：当前js textfield，返回值显示
 		win.input = input;  
+		win.down('grid').getStore().removeAll()
 		
+		// 分校区
+		var obj = {
+			"schoolID": localStorage.getItem('schoolID'),
+		} 
+		var store = Ext.getStore('Schoolsub'); 
+		store.removeAll();
+        var url = Youngshine.app.getApplication().dataUrl + 
+			'readSchoolsubList.php?data=' + JSON.stringify(obj);
+		store.getProxy().url = url;
+        store.load({
+            callback: function(records, operation, success) {
+
+            },
+            scope: this
+        });
+/*		
 		var obj = {
 			"schoolID": localStorage.getItem('schoolID'),
 		} 
@@ -353,6 +370,6 @@ Ext.define('Youngshine.view.accnt.New', {
 
             },
             scope: this
-        });
+        }); */
 	},
 });

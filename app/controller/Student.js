@@ -25,7 +25,7 @@ Ext.define('Youngshine.controller.Student', {
 				edit: this.studentEdit, //自定义事件 user...
 				del: this.studentDelete,
 				studyhist: this.studentStudyhist,//报读历史记录
-				prepaid: this.studentPrepaid,//缴费历史记录
+				accnt: this.studentAccnt,//缴费历史记录
 				followup: this.studentFollowup,
             },	
 			'student-edit': {
@@ -191,23 +191,24 @@ Ext.define('Youngshine.controller.Student', {
 	},		
 
 	// 收费明细
-    studentPrepaid: function(rec) {
+    studentAccnt: function(rec) {
 		var me = this;
-		var win = Ext.create('Youngshine.view.student.Prepaid', 
+		var win = Ext.create('Youngshine.view.student.Accnt', 
 			{record: rec
 		}); 
 		var obj = {
 			"studentID": rec.data.studentID,
 		};
-		var store = Ext.getStore('Prepaid'); 
+		var store = Ext.getStore('Accnt'); 
 		store.removeAll();
         var url = this.getApplication().dataUrl + 
-			'readPrepaidListByStudent.php?data=' + JSON.stringify(obj);
+			'readAccntListByStudent.php?data=' + JSON.stringify(obj);
 		store.getProxy().url = url;
         store.load({
             callback: function(records, operation, success) {
 		        if (success){
-					var sum = me.sumAmt();; // 合计应收
+					console.log(records)
+					var sum = me.sumAmt(records);; // 合计应收
 					win.down('displayfield[itemId=subtotal]').setValue(sum); 
 				};
             },
@@ -270,12 +271,15 @@ Ext.define('Youngshine.controller.Student', {
     },		
 	
 	// 表格合计公用函数
-	sumAmt: function(){
+	sumAmt: function(records){
 		var sum = 0; //合计费用
-		var store = Ext.getStore('Prepaid')
+		/*var store = Ext.getStore('Accnt')
 		store.each(function(record){
 			sum += parseInt(record.get('amount'));
-		})
+		}) */
+		Ext.Array.each(records, function(record) {
+	        sum += parseInt(record.data.amount);
+	    });
 		return sum;
 	},	
 });

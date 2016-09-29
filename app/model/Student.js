@@ -12,7 +12,7 @@ Ext.define('Youngshine.model.Student', {
 		{name: 'school'}, 
 		{name: 'enrolled'}, //web注册后，正式到校报名，打钩
 		{name: 'note'}, 
-		{name: 'wxID'}, // 代金券
+		{name: 'wxID'}, // 微信绑定
 		{name: 'consultID'}, //所属咨询师，可能为0 ，尚未分配咨询师
 		{name: 'schoolsubID'}, //分校区
 		{name: 'schoolsub'}, // fullname

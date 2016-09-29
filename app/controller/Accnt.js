@@ -99,6 +99,7 @@ Ext.define('Youngshine.controller.Accnt', {
 				var ret = Ext.JSON.decode(response.responseText)
 				console.log(ret.data.accntID);
 				obj.accntID = ret.data.accntID
+				obj.current = 1; //状态
 				//obj.created = '刚刚';
 				Ext.getStore('Accnt').insert(0,obj)	
 				
@@ -345,7 +346,7 @@ Ext.define('Youngshine.controller.Accnt', {
 			store.getProxy().url = url;
 	        store.load({
 	            callback: function(records, operation, success) {
-
+					console.log(records)
 	            },
 	            scope: this
 	        });

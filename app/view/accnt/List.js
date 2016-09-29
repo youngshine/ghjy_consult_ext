@@ -160,6 +160,14 @@ Ext.define('Youngshine.view.accnt.List' ,{
 	         dataIndex: 'note',
 	         //align: 'right',
 	         //renderer: Ext.util.Format.usMoney
+	     }, {
+	         text: '状态',
+	         width: 40,
+			 menuDisabled: true,
+	         dataIndex: 'current',
+			 renderer: function(value){
+		         return value == 1 ? '':'作废';
+		     }
 	         
 		},{	 
 			menuDisabled: true,
@@ -218,12 +226,17 @@ Ext.define('Youngshine.view.accnt.List' ,{
 		this.fireEvent('addnew');
 	},
 	onEdit: function(rec){ 
+		if(rec.data.current==0) return false
+			
 		this.fireEvent('edit',rec);
 	},
 	onDelete: function(rec){
 		var me = this;
 		console.log(rec);
-		Ext.Msg.confirm('提示','是否删除当前行？',function(btn){
+		
+		if(rec.data.current==0) return false
+			
+		Ext.Msg.confirm('提示','作废删除当前行？',function(btn){
 			if(btn == 'yes'){
 				me.fireEvent('del',rec);
 			}
@@ -247,10 +260,10 @@ Ext.define('Youngshine.view.accnt.List' ,{
 				var kclist = []
 				Ext.Array.each(result.data, function(name, index, countriesItSelf) {
 				    console.log(name);
-					kclist.push(name.title)
+					kclist.push(name.title+'：'+name.hour+'课时、'+name.amount+'元')
 				});
 				console.log(kclist)
-				kclist = kclist.join("、")
+				kclist = kclist.join("<br>")
 				Ext.Msg.show({
 				     title: '购买课程明细',
 				     msg: kclist,

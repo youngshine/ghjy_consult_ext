@@ -10,23 +10,39 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 	height: 450,
 	//autoScroll: true,
 	layout: 'fit',
-    title : '查找选择学生',
+    title : '查找选择全校学生',
 	
 	parentView: null, //父表单，返回显示选中值
 	
 	fbar: [{
+		xtype: 'combo',
+		width: 120,
+		itemId: 'schoolsub',
+		store: 'Schoolsub',
+		valueField: 'schoolsubID',
+		displayField: 'fullname',
+		emptyText: '选择分校区',
+		editable: false,
+		//padding: '5 0',
+		listeners: {
+			change: function(cb,newValue){
+				this.up('window').onFetch(); 
+			}
+		}
+	},{
 		xtype: 'textfield',
+		itemId : 'search',
 		width: 100,
-		itemId: 'title',
+		//fieldLabel: '筛选',
+		//labelWidth: 30,
+		//labelAlign: 'right',
 		emptyText: '搜索...',
-		//padding: '5 5',
 		enableKeyEvents: true,
 		listeners: {
 			keypress: function(field,e){
 				console.log(e.getKey())
 				if(e.getKey()=='13'){ //按Enter
-					//var cust_name = field.value; 
-					field.up('window').onFilter(field.value); 
+					field.up('window').onFetch(); 
 				}	
 			}
 		}
@@ -94,11 +110,11 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 		}     
 	}],
 
-	onFilter: function(val){
+	onFetch: function(schoolsub,search){
 		var me = this;
 		this.down('button[action=choose]').setDisabled(true)
-		this.down('grid').getSelectionModel().clearSelections()
-		
+		//this.down('grid').getSelectionModel().clearSelections()； // 不选择某行记录
+/*		
 		console.log(val)
 		//var cust_name = this.down('textfield[itemId=cust_name]').getValue();
 		var value = new RegExp("/*" + val); // 正则表达式
@@ -107,8 +123,32 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 		store.clearFilter(true)
 		store.filter([
 			{property: "fullStudent", value: value}, // studypt_name =''为全部，姓名模糊查找？？
-		]);
+		]); */
+
+		var me = this;
+		var studentName = me.down('textfield[itemId=search]').getValue().trim(),
+			schoolsub = me.down('combo[itemId=schoolsub]').getRawValue()
+		
+		if(schoolsub == null) schoolsub = ''
+			
+		var obj = {
+			"schoolID": localStorage.schoolID,
+			"schoolsub": schoolsub,
+			"studentName": studentName, // like % %
+		}
+		console.log(obj)
+		var store = this.down('grid').getStore();
+		store.removeAll();
+		store.clearFilter()
+		store.getProxy().url = Youngshine.app.getApplication().dataUrl + 
+			'readStudentListBySearch.php?data='+JSON.stringify(obj) ;
+		store.load({ //异步async
+			callback: function(records, operation, success){
+				console.log(records)
+			}   		
+		});	
 	},
+	
 	onItemdblclick: function(list, record, item, index){
 		var me = this;
 		console.log(record)

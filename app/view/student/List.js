@@ -15,7 +15,41 @@ Ext.define('Youngshine.view.student.List' ,{
 
     title : '学生列表',
 
-	fbar: [{
+	fbar: [{	
+		xtype: 'combo',
+		width: 100,
+		itemId: 'grade',
+		store: {
+			fields: ['value'],
+			data : [
+				{"value":"幼儿园"},
+				{"value":"一年级"},
+				{"value":"二年级"},
+				{"value":"三年级"},
+				{"value":"四年级"},
+				{"value":"五年级"},
+				{"value":"六年级"},
+				{"value":"七年级"},
+				{"value":"八年级"},
+				{"value":"九年级"},
+				{"value":"高一年"},
+				{"value":"高二年"},
+				{"value":"高三年"},
+			]
+		},
+		valueField: 'value',
+		displayField: 'value',
+		emptyText: '年级',
+		//editable: false,
+		//padding: '5 0',
+		listeners: {
+			change: function(cb,newValue){
+				var grade = newValue,
+					studentName = this.up('window').down('textfield[itemId=search]').getValue().trim();
+				this.up('window').onFilter(grade,studentName); 
+			}
+		}
+	},{
 		xtype: 'textfield',
 		itemId : 'search',
 		width: 100,
@@ -34,38 +68,6 @@ Ext.define('Youngshine.view.student.List' ,{
 				}	
 			}
 		}
-	},{		
-		xtype: 'combo',
-		width: 100,
-		itemId: 'grade',
-		store: {
-			fields: ['value'],
-			data : [
-				{"value":"全部年级"},
-				{"value":"一年级"},
-				{"value":"二年级"},
-				{"value":"三年级"},
-				{"value":"四年级"},
-				{"value":"五年级"},
-				{"value":"六年级"},
-				{"value":"七年级"},
-				{"value":"八年级"},
-				{"value":"九年级"},
-			]
-		},
-		valueField: 'value',
-		displayField: 'value',
-		value: '全部年级',
-		editable: false,
-		//padding: '5 0',
-		listeners: {
-			change: function(cb,newValue){
-				var grade = newValue,
-					studentName = this.up('window').down('textfield[itemId=search]').getValue().trim();
-				this.up('window').onFilter(grade,studentName); 
-			}
-		}
-
 	},'->',{	
 		xtype: 'button',
 		text: '＋新增',
@@ -141,7 +143,15 @@ Ext.define('Youngshine.view.student.List' ,{
 			 menuDisabled: true,
 	         dataIndex: 'note',
 	         //align: 'right',
-	         //renderer: Ext.util.Format.usMoney	
+	         //renderer: Ext.util.Format.usMoney
+	     }, {
+	         text: '扫码',
+	         width: 30,
+			 menuDisabled: true,
+	         dataIndex: 'wxID',
+			 renderer : function(val) {
+                 return val == '' ? '' : '是'
+             },	
 	     }, {
 	         text: '注册时间',
 	         width: 70,
@@ -175,11 +185,11 @@ Ext.define('Youngshine.view.student.List' ,{
 			items: [{
 				//iconCls: 'add',
 				icon: 'resources/images/my_pay_icon.png',
-				tooltip: '购买明细',
+				tooltip: '购买记录',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onPrepaid(rec); 
+					grid.up('window').onAccnt(rec); 
 				}	
 			}]
 		},{	 
@@ -259,8 +269,8 @@ Ext.define('Youngshine.view.student.List' ,{
 		this.fireEvent('studyhist',rec);
 	},
 	// 缴费明细
-	onPrepaid: function(rec){ 
-		this.fireEvent('prepaid',rec);
+	onAccnt: function(rec){ 
+		this.fireEvent('accnt',rec);
 	},
 	
 	// qrcode
@@ -290,12 +300,12 @@ Ext.define('Youngshine.view.student.List' ,{
 		var studentName = new RegExp("/*" + studentName); // 正则表达式
 		var store = this.down('grid').getStore();
 		store.clearFilter(); // filter is additive
-		if(grade != '全部年级' )
+		if(grade != null )
 			store.filter([
 				{property: "grade", value: grade},
 				{property: "fullStudent", value: studentName}, // 姓名模糊查找？？
 			]);
-		if(grade == '全部年级' )
+		if(grade == null )
 			store.filter("fullStudent", studentName);
 	}
 });
