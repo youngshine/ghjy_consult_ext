@@ -43,7 +43,7 @@ Ext.define('Youngshine.controller.One2one', {
 			"accntType": "一对一"
 		}		
         var url = this.getApplication().dataUrl + 
-			'readAccntDetailByUnclass.php?data=' + JSON.stringify(obj);
+			'readAccntDetailByOne2one.php?data=' + JSON.stringify(obj);
         var store = Ext.getStore('AccntDetail');
 		store.removeAll();
 		store.clearFilter();
@@ -92,13 +92,16 @@ Ext.define('Youngshine.controller.One2one', {
 	    });
     },
 	
+	// 删除报读的知识点，并且判断是否没有报读知识点，才能删除课程
 	one2onestudyDelete: function(rec){
 		console.log(rec)
 		var me = this
 		Ext.Ajax.request({
 		    url: me.getApplication().dataUrl + 'deleteStudy.php',
 		    params: {
-				studentstudyID: rec.data.studentstudyID
+				studentstudyID: rec.data.studentstudyID,
+				accntdetailID : rec.data.accntdetailID 
+				//多一个参数，父表报读课程记录，用于可能的改变状态isClassed=0
 		    },
 		    success: function(response){
 				var ret = JSON.parse(response.responseText)

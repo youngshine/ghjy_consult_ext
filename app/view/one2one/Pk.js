@@ -14,7 +14,7 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 	//maximized: true,
 	layout: 'fit',
 
-    title : '一对一待排课',
+    title : '一对一排课',
 
 	fbar: [{
 		xtype: 'textfield',
@@ -29,27 +29,33 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 			keypress: function(field,e){
 				console.log(e.getKey())
 				if(e.getKey()=='13'){ //按Enter
-					var studentName = field.value,
-						accntType = field.up('window').down('combo[itemId=accntType]').getValue();
-					field.up('window').onFilter(accntType,studentName); 
+					var title = field.value,
+						isClassed = field.up('window').down('combo[itemId=isClassed]').getValue();
+					field.up('window').onFilter(title,isClassed); 
 				}	
 			}
 		}
 	},{		
 		xtype: 'combo',
 		width: 100,
-		itemId: 'schoolsub',
-		store: 'Schoolsub',
-		valueField: 'schoolsubID',
-		displayField: 'schoolsubName',
-		//value: '全部年级',
-		//editable: false,
+		itemId: 'isClassed',
+		store: {
+			fields: ['value','text'],
+			data : [
+				{"value":0,"text":"未排课"},
+				{"value":1,"text":"已排课"},
+			]
+		},
+		valueField: 'value',
+		displayField: 'text',
+		emptyText: '排课状态',
+		editable: false,
 		//padding: '5 0',
 		listeners: {
 			change: function(cb,newValue){
-				var accntType = newValue,
-					studentName = this.up('window').down('textfield[itemId=search]').getValue().trim();
-				this.up('window').onFilter(accntType,studentName); 
+				var isClassed = newValue,
+					title = this.up('window').down('textfield[itemId=search]').getValue().trim();
+				this.up('window').onFilter(title,isClassed); 
 			}
 		}
 
@@ -130,24 +136,25 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 	}],
 
 	onStudy: function(rec){ 
+		console.log(rec.data.consultID,localStorage.consultID)
 		if (rec.data.consultID != localStorage.consultID){
 			Ext.Msg.alert('提示','非班级创建人，不能修改！');
-			//return;
+			return;
 		}
 		this.fireEvent('study',rec);
 	},
 	
-	onFilter: function(accntType,studentName){
-		var me = this;
-		var studentName = new RegExp("/*" + studentName); // 正则表达式
+	onFilter: function(title,isClassed){
+		var me = this; console.log(isClassed)
+		var title = new RegExp("/*" + title); // 正则表达式
 		var store = this.down('grid').getStore();
 		store.clearFilter(); // filter is additive
-		if(accntType != '' )
+		if(isClassed != null )
 			store.filter([
-				{property: "accntType", value: accntType},
-				{property: "studentName", value: studentName}, // 姓名模糊查找？？
+				{property: "isClassed", value: isClassed},
+				{property: "title", value: title}, // 姓名模糊查找？？
 			]);
-		if(accntType == '' )
-			store.filter("studentName", studentName);
+		if(isClassed == null )
+			store.filter("title", title);
 	}
 });

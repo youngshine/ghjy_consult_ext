@@ -105,7 +105,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			name: 'amount',
 			fieldLabel: '实收(元)',
 			//value: 0,
-			disabled: true
+			//disabled: true
 		},{
 			xtype: 'numberfield',
 			name: 'amount_owe',
@@ -204,7 +204,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			//wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
 			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
 			//accntDate = this.down('datefield[name=accntDate]').getValue(), 
-			//amount = this.down('numberfield[name=amount]').getValue(),
+			amount = this.down('numberfield[name=amount]').getValue(),
 			amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
 			//amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
 			note = this.down('textfield[name=note]').getValue().trim(),
@@ -234,9 +234,9 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			"wxID": wxID, //发微信模版通知消息
 			"accntType": accntType,
 			"accntDate": accntDate,
-			"payment": payment,
+			"payment": payment,  */
 			"amount": amount,
-			"amount_ys": amount_ys, */
+			//"amount_ys": amount_ys, 
 			"amount_owe": amount_owe,
 			"note": note,	
 			"consultID_owe": consultID_owe,	//业绩归属

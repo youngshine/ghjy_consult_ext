@@ -1,6 +1,7 @@
 <?php
 /*
- * 8-1 待分班的报读课程isClass=0，缴费得子记录（大小班，一对一）
+ * 一对一的所有排课，方便管理
+ * 8-1 待分班的报读课程isClass=0，缴费得子记录（大小班，一对一）？？？
 */
 require_once 'db/response.php';
 require_once 'db/request.php';
@@ -18,10 +19,9 @@ require_once('db/database_connection.php');
 		From `ghjy_accnt_detail` a 
 		Join `ghjy_accnt` b On b.accntID=a.accntID 
 		Join `ghjy_student` c On c.studentId=b.studentID 
-		WHERE b.consultID = $consultID And b.accntType='$accntType' 
-			And a.isClassed=0 "; 
+		WHERE b.consultID = $consultID And b.accntType='$accntType' "; 
 	$result = mysql_query($sql) 
-		or die("Invalid query: readAccntDetailList " . mysql_error());
+		or die("Invalid query: readAccntDetailList By 1to1 " . mysql_error());
 
 	$query_array = array();
 	$i = 0;
@@ -33,7 +33,7 @@ require_once('db/database_connection.php');
 	}
 		
 	$res->success = true;
-	$res->message = "读取缴费字表成功";
+	$res->message = "读取某个咨询师缴费子表1to1成功";
 	$res->data = $query_array;
 
 	echo $_GET['callback']."(".$res->to_json().")";

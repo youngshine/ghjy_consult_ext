@@ -240,7 +240,12 @@ Ext.define('Youngshine.view.accnt.New', {
 			Ext.Msg.alert('提示','姓名不能空白！');
 			return;
 		}
-		
+/*	可能关系户不收钱	
+		if (amount == 0){
+			Ext.Msg.alert('提示','实收金额不能为0！');
+			return;
+		}
+*/		
 		/*
 		var store = me.down('grid').getStore()
 		if (store.getCount()==0){

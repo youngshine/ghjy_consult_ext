@@ -218,6 +218,8 @@ Ext.define('Youngshine.controller.Accnt', {
             scope: this
         }); */
     },
+	
+	// 只修改主表，明细记录不能修改
 	accnteditSave: function(obj,oldWin){ //obj用户信息
 		var me = this;
 		Ext.MessageBox.show({
@@ -227,7 +229,7 @@ Ext.define('Youngshine.controller.Accnt', {
 		   waitConfig: {interval:200},
 		});
 		Ext.Ajax.request({
-            url: this.getApplication().dataUrl + 'updateAccntDetail.php',
+            url: this.getApplication().dataUrl + 'updateAccnt.php',
             //callbackKey: 'callback',
             params: obj,
             success: function(response){

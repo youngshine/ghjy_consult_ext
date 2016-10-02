@@ -138,9 +138,21 @@ Ext.define('Youngshine.view.accnt.List' ,{
 			 align: 'right'
 	     }, {
 	         text: '欠费',
-	         width: 60,
+	         width: 50,
 			 menuDisabled: true,
 	         dataIndex: 'amount_owe',
+			 align: 'right',
+			 renderer: function(value){
+		         if (value == 0) {
+		             return '';
+		         }
+		         return value;
+		     }
+	     }, {
+	         text: '入账',
+	         width: 50,
+			 menuDisabled: true,
+	         dataIndex: 'fullAmountPaid',
 			 align: 'right',
 			 renderer: function(value){
 		         if (value == 0) {

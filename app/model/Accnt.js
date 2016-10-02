@@ -28,5 +28,11 @@ Ext.define('Youngshine.model.Accnt', {
 		{name: 'schoolsub'},
 		
 		{name: 'schoolID'},
+		
+		// 到账
+		{ name: 'fullAmountPaid', convert: function(value, record){
+				return parseInt(record.get('amount')) - parseInt(record.get('amount_owe')); 
+			} 
+		},
     ]
 });

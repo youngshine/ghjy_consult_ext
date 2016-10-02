@@ -13,8 +13,13 @@ Ext.define('Youngshine.model.AccntDetail', {
 		{name: 'hour'}, 
 		{name: 'amount'}, // 金额
 		
+		{name: 'isClassed'}, // 是否分班或一对一排课 0，1
+		
 		{name: 'accntType'}, 
 		{name: 'accntDate'}, 
+		
+		{name: 'consultID'}, 
+		
 		{name: 'studentID'}, 
 		{name: 'studentName'},
     ]

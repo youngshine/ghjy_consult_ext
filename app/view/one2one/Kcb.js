@@ -180,7 +180,11 @@ Ext.define('Youngshine.view.one2one.Kcb', {
 			teacherName = this.down('combo[name=teacherID]').getRawValue(),
 			studentstudyID = this.down('hiddenfield[name=studentstudyID]').getValue() //unique
 		
-		if(teacherID==null) teacherID=0  //尚无法指定教师
+		if(teacherID==null) teacherID=0  //尚无法指定教师，可以先不选择？
+		if (teacherID == 0){	
+			//Ext.Msg.alert('提示','请选择一对一任课教师！');
+			//return;
+		}
 			
 		var arrList = [] //,jsonList = {};
 		var store = me.down('grid').getStore()
