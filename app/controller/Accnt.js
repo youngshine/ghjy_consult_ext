@@ -300,6 +300,7 @@ Ext.define('Youngshine.controller.Accnt', {
 			} 
 			var store = Ext.getStore('Kclist'); 
 			store.removeAll();
+			store.clearFilter();
 	        var url = this.getApplication().dataUrl + 
 				'readKclist.php?data=' + JSON.stringify(obj);
 			store.getProxy().url = url;
@@ -321,6 +322,7 @@ Ext.define('Youngshine.controller.Accnt', {
 			} 
 			var store = Ext.getStore('Kclist'); 
 			store.removeAll();
+			store.clearFilter();
 	        var url = this.getApplication().dataUrl + 
 				'readKclist.php?data=' + JSON.stringify(obj);
 			store.getProxy().url = url;
@@ -343,6 +345,7 @@ Ext.define('Youngshine.controller.Accnt', {
 			} 
 			var store = Ext.getStore('AccntDetail'); //store会重复冲突吗？
 			store.removeAll();
+			store.clearFilter();
 	        var url = this.getApplication().dataUrl + 
 				'readAccntDetailByRefund.php?data=' + JSON.stringify(obj);
 			store.getProxy().url = url;

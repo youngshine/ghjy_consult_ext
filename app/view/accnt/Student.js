@@ -12,6 +12,8 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 	layout: 'fit',
     title : '查找选择全校学生',
 	
+	defaultFocus: 'schoolsub',
+	
 	parentView: null, //父表单，返回显示选中值
 	
 	fbar: [{
@@ -22,7 +24,7 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 		valueField: 'schoolsubID',
 		displayField: 'fullname',
 		emptyText: '选择分校区',
-		editable: false,
+		editable: true,
 		//padding: '5 0',
 		listeners: {
 			change: function(cb,newValue){

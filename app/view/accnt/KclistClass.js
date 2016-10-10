@@ -25,6 +25,28 @@ Ext.define('Youngshine.view.accnt.KclistClass' ,{
 	record: null, // 父表的记录
 
 	fbar: [{
+		xtype: 'combo',
+		width: 80,
+		itemId: 'kmType',
+		store: {
+			fields: ['value'],
+			data : [
+				{"value":"数理化"},
+				{"value":"语政英"},
+				{"value":"史地生"},
+				{"value":"艺术"},
+			]
+		},
+		valueField: 'value',
+		displayField: 'value',
+		editable: true,
+		emptyText: '学科类别',
+		listeners: {
+			change: function(cb,newValue){
+				cb.up('window').onFilter(); 
+			}
+		}
+	},{
 		xtype: 'textfield',
 		width: 100,
 		itemId: 'search',
@@ -98,39 +120,23 @@ Ext.define('Youngshine.view.accnt.KclistClass' ,{
 		}     
 	}],
 
-	// 读取某个学科知识点
-	onFetch: function(val){
-        var store = Ext.getStore('Zsd');
-		store.removeAll();
-		store.clearFilter();
-		var obj = {
-			"subject": val
-		}
-		var url = Youngshine.getApplication().dataUrl + 
-			'readZsdList.php?data='+ JSON.stringify(obj); ;
-		store.getProxy().url = url;
-        store.load({
-            callback: function(records, operation, success) {
-				//console.log(records);
-            },
-            scope: this
-        }); // end store知识点
-	},
 	
 	onFilter: function(val){
 		var me = this;
 		//this.down('button[action=choose]').setDisabled(true)
 		//this.down('grid').getSelectionModel().clearSelections()
 		
-		console.log(val)
-		//var cust_name = this.down('textfield[itemId=cust_name]').getValue();
-		var value = new RegExp("/*" + val); // 正则表达式
-		console.log(value)
+		var kmType = me.down('combo[itemId=kmType]').getValue(),
+			title = me.down('textfield[itemId=search]').getValue().trim();
+		title = new RegExp("/*" + title); // 正则表达式，模糊查找
+		kmType = new RegExp("/*" + kmType);
+		console.log(title)
 		var store = this.down('grid').getStore();
 		store.clearFilter(true)
 		store.filter([
-			{property: "title", value: value}
-			//{property: "fullZsd", value: value}, // studypt_name =''为全部，姓名模糊查找？？
+			{property: "title", value: title},
+			{property: "kmType", value: kmType}, 
+			// studypt_name =''为全部，姓名模糊查找？？
 		]);
 	},
 	onItemdblclick: function(list, record, item, index){

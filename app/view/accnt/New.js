@@ -100,12 +100,12 @@ Ext.define('Youngshine.view.accnt.New', {
 		},{
 			xtype: 'displayfield',
 			name: 'amount_ys',
-			fieldLabel: '应收金额',
+			fieldLabel: '合计金额',
 			value: 0
 		},{
 			xtype: 'numberfield',
 			name: 'amount',
-			fieldLabel: '实收(元)',
+			fieldLabel: '折后(元)',
 			value: 0
 		},{
 			xtype: 'numberfield',

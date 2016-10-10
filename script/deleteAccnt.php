@@ -16,13 +16,13 @@ $result = mysql_query($query)
 	or die("Invalid query: deleteAccnt disable" . mysql_error());
 */
 
-// 1、先判断子表记录是否已经分班，如果是，不能删除
+// 1、先判断子表记录是否已经分班（或一对一排课）isClassed，如果是，不能删除
 $sql = "SELECT isClassed FROM `ghjy_accnt_detail` Where accntID=$accntID";
 $result = mysql_query($sql);
 while($row = mysql_fetch_array($result))
 {
 	$isClassed = $row['isClassed'];
-	echo $$isClassed;
+	echo $isClassed;
 	if($isClassed==1){
 		echo json_encode(array(
 		    "success" => false,
