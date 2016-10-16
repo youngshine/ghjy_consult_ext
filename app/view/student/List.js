@@ -184,8 +184,8 @@ Ext.define('Youngshine.view.student.List' ,{
 			width: 30,
 			items: [{
 				//iconCls: 'add',
-				icon: 'resources/images/my_pay_icon.png',
-				tooltip: '购买记录',
+				icon: 'resources/images/my_orders_icon.png',
+				tooltip: '购买单',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);

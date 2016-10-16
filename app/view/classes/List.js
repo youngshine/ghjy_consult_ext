@@ -73,8 +73,8 @@ Ext.define('Youngshine.view.classes.List' ,{
 			 menuDisabled: true,
 	         dataIndex: 'title'
 	     }, {
-	         text: '课程',
-	         width: 120,
+	         text: '对应课程',
+	         width: 100,
 	         //sortable: false,
 			 menuDisabled: true,
 	         dataIndex: 'kcTitle'
@@ -115,9 +115,25 @@ Ext.define('Youngshine.view.classes.List' ,{
 	         dataIndex: 'teacherName_chief',
 	     }, {
 	         text: '分校区',
-	         width: 60,
+	         width: 100,
 			 menuDisabled: true,
 	         dataIndex: 'fullname',
+			 
+ 		},{	 
+ 			menuDisabled: true,
+ 			sortable: false,
+ 			xtype: 'actioncolumn',
+ 			width: 30,
+ 			items: [{
+ 				//iconCls: 'add',
+ 				icon: 'resources/images/my_user_icon.png',
+ 				tooltip: '学生',
+ 				handler: function(grid, rowIndex, colIndex) {
+ 					grid.getSelectionModel().select(rowIndex); // 高亮
+ 					var rec = grid.getStore().getAt(rowIndex);
+ 					grid.up('window').onStudent(rec); 
+ 				}	
+ 			}]	
 		},{	 
 			menuDisabled: true,
 			sortable: false,
@@ -150,24 +166,8 @@ Ext.define('Youngshine.view.classes.List' ,{
 					grid.up('window').onDelete(rec); 
 				}	
 			}]	
-			
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_right_icon.png',
-				tooltip: '班级学生',
-				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮
-					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onStudent(rec); 
-				}	
-			}]	
  		 
-	     }],     
+	    }],     
 	}],
 
 	onStudent: function(rec){ 

@@ -13,7 +13,7 @@ Ext.define('Youngshine.view.student.Accnt' ,{
 	height: 450,
 	layout: 'fit',
 
-    title : '购买缴费记录',
+    title : '购买课程记录',
 	//titleAlign: 'center',
 	
 	record: null, // 父表参数传递，该学生信息
@@ -43,10 +43,15 @@ Ext.define('Youngshine.view.student.Accnt' ,{
 		xtype: 'grid',
 		stripeRows: true,
 		allowDeselect: true,
-		selType: 'cellmodel',
+		//selType: 'cellmodel',
 		store: 'Accnt',
 	    columns: [{
 			xtype: 'rownumberer',
+	     }, {
+	         text: '单据号',
+	         width: 80,
+			 menuDisabled: true,
+	         dataIndex: 'accntID'
 	     }, {
 	         text: '日期',
 	         width: 80,
@@ -64,18 +69,13 @@ Ext.define('Youngshine.view.student.Accnt' ,{
 	         dataIndex: 'amount',
 			 align: 'right' 
 	     }, {
-	         text: '欠费',
+	         text: '欠费(元)',
 	         width: 60,
 			 menuDisabled: true,
-	         dataIndex: 'amount_owe',
+	         dataIndex: 'balance',
 			 align: 'right' 
 	     }, {
-	         text: '付款方式',
-	         width: 60,
-			 menuDisabled: true,
-	         dataIndex: 'payment'
-	     }, {
-	         text: '归属咨询',
+	         text: '归属咨询师',
 	         width: 80,
 			 menuDisabled: true,
 	         dataIndex: 'consultName_owe'
@@ -91,15 +91,30 @@ Ext.define('Youngshine.view.student.Accnt' ,{
 			width: 30,
 			items: [{
 				//iconCls: 'add',
-				icon: 'resources/images/my_right_icon.png',
+				icon: 'resources/images/my_kclist_icon.png',
 				tooltip: '课程明细',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);
 					grid.up('window').onAccntDetail(rec); 
 				}	
-			}]  			 
-	     }],     
+			}] 
+	     }, {
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_pay_icon.png',
+				tooltip: '缴款明细',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onAccntFee(rec); 
+				}	
+			}] 			 			 
+	    }],     
 	}],
 
 	// 缴费的子表明细
@@ -123,6 +138,32 @@ Ext.define('Youngshine.view.student.Accnt' ,{
 						title += (i+1) + '、' + arr[i].title + '：' + 
 							arr[i].hour+'课时'+ arr[i].amount+'元' + '<br>';
 					Ext.MessageBox.alert('课程明细',title)
+                }
+            },
+        });
+	},
+	
+	// 缴款记录
+	onAccntFee: function(record){
+		var obj = {
+			"accntID": record.get('accntID')
+		}
+		console.log(obj)
+        Ext.data.JsonP.request({
+            url: Youngshine.app.getApplication().dataUrl + 'readAccntFee.php', 
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+                if(result.success){
+					console.log(result.data)
+					var arr = result.data,
+						title = ''
+					for(var i=0;i<arr.length;i++)
+						title += (i+1) + '、' + arr[i].feeDate + arr[i].payment + 
+							'：' + arr[i].amount+'元' + '<br>';
+					Ext.MessageBox.alert('缴款记录',title)
                 }
             },
         });

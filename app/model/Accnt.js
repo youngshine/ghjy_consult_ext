@@ -6,7 +6,7 @@ Ext.define('Youngshine.model.Accnt', {
 		{name: 'accntID'}, 
 		{name: 'accntDate'}, 
 		{name: 'accntType'}, // 大小班，一对一，退费
-		{name: 'payment'}, // 学生
+		//{name: 'payment'}, // 学生
 		{name: 'note'},
 		{name: 'amount'}, 
 		{name: 'amount_ys'}, //应收
@@ -32,11 +32,6 @@ Ext.define('Youngshine.model.Accnt', {
 		
 		{name: 'schoolID'},
 		
-		// 到账
-		{ name: 'fullAmountPaid', convert: function(value, record){
-				return parseInt(record.get('amount')) - parseInt(record.get('amount_owe')); 
-			} 
-		},
 		//  优惠折扣
 		{ name: 'discount', convert: function(value, record){
 				return parseInt(record.get('amount_ys')) - parseInt(record.get('amount')); 

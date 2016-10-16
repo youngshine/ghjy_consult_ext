@@ -294,7 +294,7 @@ Ext.define('Youngshine.controller.Accnt', {
 			},
 			failure: function(){
 				Ext.MessageBox.hide();
-				Ext.Msg.alert('网络错误','服务请求失败');
+				Ext.Msg.alert('错误','服务请求失败');
 			}
 		});	
 	},

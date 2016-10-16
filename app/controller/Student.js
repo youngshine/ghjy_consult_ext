@@ -25,7 +25,7 @@ Ext.define('Youngshine.controller.Student', {
 				edit: this.studentEdit, //自定义事件 user...
 				del: this.studentDelete,
 				studyhist: this.studentStudyhist,//报读历史记录
-				accnt: this.studentAccnt,//缴费历史记录
+				accnt: this.studentAccnt,//购买订单历史记录
 				followup: this.studentFollowup,
             },	
 			'student-edit': {
@@ -202,7 +202,7 @@ Ext.define('Youngshine.controller.Student', {
 		var store = Ext.getStore('Accnt'); 
 		store.removeAll();
         var url = this.getApplication().dataUrl + 
-			'readAccntListByStudent.php?data=' + JSON.stringify(obj);
+			'readOrdersListByStudent.php?data=' + JSON.stringify(obj);
 		store.getProxy().url = url;
         store.load({
             callback: function(records, operation, success) {
