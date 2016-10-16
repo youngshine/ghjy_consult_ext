@@ -13,6 +13,9 @@ Ext.define('Youngshine.controller.Accnt', {
 	},{
 		ref: 'accntedit',
 		selector: 'accnt-edit'
+	},{
+		ref: 'accntfee',
+		selector: 'accnt-fee'		
 	}],
 
     init: function() {
@@ -21,6 +24,7 @@ Ext.define('Youngshine.controller.Accnt', {
 				addnew: this.accntNew,
 				edit: this.accntEdit,
 				del: this.accntDelete,
+				fee: this.accntFee,
 			},	
 			'accnt-new': {
 				save: this.accntnewSave,
@@ -28,8 +32,14 @@ Ext.define('Youngshine.controller.Accnt', {
 			},	
 			'accnt-edit': {
 				save: this.accnteditSave,
-				//addrow: this.accntnewAddrow
-			},		
+			},	
+			'accnt-fee': {
+				//addnew: this.accntfeeAddnew,
+				del: this.accntfeeDelete,
+			},	
+			'fee-new': {
+				save: this.feenewSave,
+			},
         });
     },
 
@@ -43,8 +53,9 @@ Ext.define('Youngshine.controller.Accnt', {
 		var obj = {
 			"consultID": localStorage.getItem('consultID'),
 		} 
-        var url = this.getApplication().dataUrl + 
-			'readAccntList.php?data=' + JSON.stringify(obj);
+        //var url = this.getApplication().dataUrl + 'readAccntList.php?data=' + JSON.stringify(obj);
+	    var url = this.getApplication().dataUrl + 
+			'readOrdersList.php?data=' + JSON.stringify(obj);
         var store = Ext.getStore('Accnt');
 		store.removeAll();
 		store.clearFilter();
@@ -92,12 +103,13 @@ Ext.define('Youngshine.controller.Accnt', {
     	var me = this; console.log(obj)
 		// 传递参数，带有数组（子表多条记录）
 		Ext.Ajax.request({
-		    url: me.getApplication().dataUrl + 'createAccntAndDetail.php',
+		    //url: me.getApplication().dataUrl + 'createAccntAndDetail.php',
+			url: me.getApplication().dataUrl + 'createOrders.php', 
 		    params: obj,
 		    success: function(response){ 
 				console.log(response.responseText)
 				var ret = Ext.JSON.decode(response.responseText)
-				console.log(ret.data.accntID);
+				//console.log(ret.data.accntID);
 				obj.accntID = ret.data.accntID
 				obj.current = 1; //状态
 				//obj.created = '刚刚';
@@ -115,8 +127,9 @@ Ext.define('Youngshine.controller.Accnt', {
 						accntID    : person.accntID,
 						accntType  : person.accntType,
 						accntDate  : person.accntDate,
-						amount     : person.amount,
 						amount_ys  : person.amount_ys,
+						amount     : person.amount,
+						amount_now : person.amount_now, //本次缴款
 						school     : localStorage.school
 					}
 					console.log(objWx)
@@ -229,7 +242,8 @@ Ext.define('Youngshine.controller.Accnt', {
 		   waitConfig: {interval:200},
 		});
 		Ext.Ajax.request({
-            url: this.getApplication().dataUrl + 'updateAccnt.php',
+            //url: this.getApplication().dataUrl + 'updateAccnt.php',
+			url: this.getApplication().dataUrl + 'updateOrders.php',
             //callbackKey: 'callback',
             params: obj,
             success: function(response){
@@ -263,7 +277,8 @@ Ext.define('Youngshine.controller.Accnt', {
 		console.log(record)
 		Ext.Ajax.request({
 			// 删除服务端记录: 最好做个标记，别真正删除？或者过期的和定期的不能删除？
-			url: this.getApplication().dataUrl + 'deleteAccnt.php',
+			//url: this.getApplication().dataUrl + 'deleteAccnt.php',
+			url: this.getApplication().dataUrl + 'deleteOrders.php',
 			//callbackKey: 'callback',
 			params: {"accntID": record.data.accntID },
 			success: function(response){
@@ -283,6 +298,34 @@ Ext.define('Youngshine.controller.Accnt', {
 			}
 		});	
 	},
+	
+	// 某个订单的收费明细 ajax instead of jsonp???
+    accntFee: function(record) {
+		var me = this;
+		var win = Ext.create('Youngshine.view.accnt.Fee', 
+			{parentRecord: record}
+		); 
+		var params = {
+			"accntID": record.data.accntID,
+		};
+		console.log(params)
+		var store = Ext.getStore('AccntFee'); 
+		store.removeAll();
+		store.clearFilter()
+        var url = this.getApplication().dataUrl + 
+			'readAccntFee.php?data=' + JSON.stringify(params);
+		store.getProxy().url = url; // jsonp
+        store.load({
+            callback: function(records, operation, success) {
+		        if (success){
+					console.log(records)
+					//var sum = me.sumAmt(records);; // 合计
+					//win.down('displayfield[itemId=subtotal]').setValue(sum); 
+				};
+            },
+            scope: this
+        }); 
+    },
 	
 	// 添加报读课程明细（大小班、一对一、退费）
 	accntnewAddrow: function(accntType,oldView){
@@ -358,5 +401,39 @@ Ext.define('Youngshine.controller.Accnt', {
 			break;
 		}
 	},	
+
+	feenewSave: function( obj,oldView )	{
+    	var me = this; 
+		console.log(obj)
+		Ext.Ajax.request({ 
+            url: me.getApplication().dataUrl +  'createAccntFee.php',
+            params: obj,
+            success: function(response){
+				var ret = JSON.parse(response.responseText)
+				//更新前端store，最新插入记录ID，才能删除修改
+				obj.accntfeeID = ret.data.accntfeeID; 
+				// model数组添加项目
+				Ext.getStore('AccntFee').insert(0,obj); //新增记录，排在最前面	
+				
+				oldView.destroy()
+            }
+		});
+	},	
+	accntfeeDelete: function(record){
+		var me = this
+		Ext.Ajax.request({
+		    url: me.getApplication().dataUrl + 'deleteAccntFee.php',
+		    params: {
+				accntfeeID : record.data.accntfeeID 
+		    },
+		    success: function(response){
+				var ret = JSON.parse(response.responseText)
+				//Ext.toast(ret.message,3000)
+				if(ret.success){
+					Ext.getStore('AccntFee').remove(record);
+				}		         
+		    }
+		});
+	},
 	
 });

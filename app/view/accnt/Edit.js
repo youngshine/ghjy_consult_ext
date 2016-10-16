@@ -10,7 +10,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
     //layout: 'fit',
 	width: 600,
 	//height: 300,
-	title : '修改缴费',
+	title : '修改课程销售单',
 
     fbar : [{
     	text: '＋添加课程明细',
@@ -35,7 +35,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
 		xtype: 'form',
 		bodyPadding: 10,
 		fieldDefaults: {
-			labelWidth: 65,
+			labelWidth: 85,
 			labelAlign: 'right',
 			anchor: '100%'
 		},
@@ -98,12 +98,16 @@ Ext.define('Youngshine.view.accnt.Edit', {
 		},{
 			xtype: 'displayfield',
 			name: 'amount_ys',
-			fieldLabel: '合计金额',
+			fieldLabel: '课程合计金额',
 			value: 0
 		},{
-			xtype: 'numberfield',
+			xtype: 'displayfield',
+			name: 'discount',
+			fieldLabel: '打折(元)',
+		},{
+			xtype: 'displayfield',
 			name: 'amount',
-			fieldLabel: '折后(元)',
+			fieldLabel: '折后实收金额',
 			//value: 0,
 			//disabled: true
 		},{
@@ -111,6 +115,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			name: 'amount_owe',
 			fieldLabel: '欠费(元)',
 			//value: 0
+			hidden: true
 		},{
 			xtype: 'textfield',
 			name: 'note',
@@ -136,7 +141,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			
 	},{
 		xtype: 'grid',
-		disabled: true,
+		//disabled: true,
 		height: 200,
 		tripeRows: true,
 		//allowDeselect: true,
@@ -187,6 +192,7 @@ Ext.define('Youngshine.view.accnt.Edit', {
  				//iconCls: 'add',
  				icon: 'resources/images/my_delete_icon.png',
  				tooltip: '删除',
+				disabled: true,
  				handler: function(grid, rowIndex, colIndex) {
  					grid.getSelectionModel().select(rowIndex); // 高亮
  					var rec = grid.getStore().getAt(rowIndex);
@@ -204,8 +210,8 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			//wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
 			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
 			//accntDate = this.down('datefield[name=accntDate]').getValue(), 
-			amount = this.down('numberfield[name=amount]').getValue(),
-			amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
+			//amount = this.down('numberfield[name=amount]').getValue(),
+			//amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
 			//amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
 			note = this.down('textfield[name=note]').getValue().trim(),
 			consultID_owe = this.down('combo[name=consultID_owe]').getValue(),
@@ -235,9 +241,9 @@ Ext.define('Youngshine.view.accnt.Edit', {
 			"accntType": accntType,
 			"accntDate": accntDate,
 			"payment": payment,  */
-			"amount": amount,
+			//"amount": amount,
 			//"amount_ys": amount_ys, 
-			"amount_owe": amount_owe,
+			//"amount_owe": amount_owe,
 			"note": note,	
 			"consultID_owe": consultID_owe,	//业绩归属
 			"consultName_owe": consultName_owe, //前端显示
@@ -259,41 +265,5 @@ Ext.define('Youngshine.view.accnt.Edit', {
 				model.set(obj) */
 			}
 		})
-	},
-	
-	// 添加课程明晰
-	onAddrow: function(){
-		var me = this;
-		
-		// 有学生，才有退费
-		var studentName = this.down('textfield[name=studentName]').getValue().trim()
-		if (studentName == ''){
-			Ext.Msg.alert('提示','请先选择学生！');
-			return;
-		}
-		
-		// 有无选中
-		var radios = this.down('radiogroup[itemId=accntType]')
-		var radioChecked = radios.getChecked()[0]
-		if (!radioChecked){
-			Ext.Msg.alert('提示','请选择缴费类型！');
-			return;
-		}
-		var accntType = radioChecked.boxLabel
-		console.log(accntType)
-		radios.setDisabled(true) //添加，就不能再选择类型
-		
-		me.fireEvent('addrow',accntType,me); 
-	},
-	
-	// 删除
-	onDelete: function(record){
-		var me = this; console.log(record)
-		me.down('grid').getStore().remove(record); //store选择的排除，从 检测项目.. 
-		
-		var ys = me.down('displayfield[name=amount_ys]'),
-			ss = me.down('numberfield[name=amount]')
-		ys.setValue ( parseInt(ys.getValue()) - parseInt(record.data.amount) )
-		ss.setValue ( parseInt(ss.getValue()) - parseInt(record.data.amount) )
 	},
 });

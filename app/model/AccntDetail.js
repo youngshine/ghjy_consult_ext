@@ -1,4 +1,4 @@
-// 缴费明细
+// 报读课程明细
 Ext.define('Youngshine.model.AccntDetail', {
     extend: 'Ext.data.Model',
     //idProperty: 'admin_id',

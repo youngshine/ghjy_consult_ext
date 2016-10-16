@@ -51,8 +51,9 @@ $wxID = addslashes($_REQUEST['wxID']);
 //$wxID = 'oMEqkuMUKNmxtAxWGrjeOWPRFO20';
 $student = $_REQUEST['student'];
 $accntDate = $_REQUEST['accntDate'];
-$amount = $_REQUEST['amount'];
 $amount_ys = $_REQUEST['amount_ys'];
+$amount = $_REQUEST['amount'];
+$amount_now = $_REQUEST['amount_now'];
 $school = $_REQUEST['school'];
 //$created = $_REQUEST['created'];
 
@@ -71,7 +72,7 @@ $data = '{
                    "color":"#173177"
                },
                "keyword2": {
-                   "value":"' . $amount . '",
+                   "value":"' . $amount_now . '",
                    "color":"#173177"
                },
                "keyword3": {

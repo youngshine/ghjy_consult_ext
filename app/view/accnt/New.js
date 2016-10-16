@@ -10,10 +10,12 @@ Ext.define('Youngshine.view.accnt.New', {
 	width: 600,
 	//height: 600,
 	//layout: 'vbox',
-	title : '新增缴费退费',
+	title : '新增课程销售单',
 
     fbar : [{
     	text: '＋添加课程明细',
+		action: 'addrow',
+		disabled: true,
 		handler: function(btn){
 			btn.up('window').onAddrow();
 		}
@@ -36,7 +38,7 @@ Ext.define('Youngshine.view.accnt.New', {
 		xtype: 'form',
 		bodyPadding: 10,
 		fieldDefaults: {
-			labelWidth: 65,
+			labelWidth: 85,
 			labelAlign: 'right',
 			anchor: '100%'
 		},
@@ -55,14 +57,15 @@ Ext.define('Youngshine.view.accnt.New', {
 			listeners: {
 				change: function( field, newValue, oldValue, eOpts ){
 					field.up('window').down('button[action=save]').setDisabled(false)
+					field.up('window').down('button[action=addrow]').setDisabled(false)
 				}
 			}	
 		},{
 			xtype: 'textfield',
 			name : 'studentName',
-			fieldLabel: '姓名',
+			fieldLabel: '学生姓名',
 			readOnly: true,
-			emptyText: '选择全校学生',
+			emptyText: '全校范围选择学生',
 			listeners: {
 		        click: {
 		            element: 'el', 
@@ -85,34 +88,6 @@ Ext.define('Youngshine.view.accnt.New', {
             allowBlank: false,
 			value: new Date()	
 		},{
-			xtype: 'radiogroup',
-	        fieldLabel: '付款方式',
-			itemId: 'payment',
-	        // Arrange radio buttons into two columns, distributed vertically
-	        //columns: 2,
-	        //vertical: true,
-	        items: [
-	            { boxLabel: '现金', name: 'pay', inputValue: '1' },
-	            { boxLabel: '刷卡', name: 'pay', inputValue: '2' },
-	            { boxLabel: '微信', name: 'pay', inputValue: '3' },
-				{ boxLabel: '支付宝', name: 'pay', inputValue: '3' }
-	        ],
-		},{
-			xtype: 'displayfield',
-			name: 'amount_ys',
-			fieldLabel: '合计金额',
-			value: 0
-		},{
-			xtype: 'numberfield',
-			name: 'amount',
-			fieldLabel: '折后(元)',
-			value: 0
-		},{
-			xtype: 'numberfield',
-			name: 'amount_owe',
-			fieldLabel: '欠费(元)',
-			value: 0
-		},{
 			xtype: 'textfield',
 			name: 'note',
 			fieldLabel: '备注',		
@@ -129,6 +104,54 @@ Ext.define('Youngshine.view.accnt.New', {
                 itemTpl: '{consultName} - {schoolsub}'
             },	
 			queryMode: 'local'	
+
+			
+		},{
+			xtype: 'fieldset',
+			items: [{
+				xtype: 'displayfield',
+				name: 'amount_ys',
+				fieldLabel: '课程合计金额',
+				value: 0
+			},{
+				xtype: 'numberfield',
+				name: 'discount',
+				fieldLabel: '打折(元)',
+				value: 0,
+				listeners: {
+			        change: function(field,newValue){ 					
+						var total = field.up('window').down('displayfield[name=amount_ys]').getValue()
+						
+						//if(newValue > total) return false
+							
+						field.up('window').down('displayfield[name=amount]').setValue(total-newValue)
+			        },	
+			    },
+			},{
+				xtype: 'displayfield',
+				name: 'amount',
+				fieldLabel: '折后实收金额',
+				value: 0
+			},{
+				xtype: 'numberfield',
+				//name: 'amount_owe',
+				name: 'amount_now',
+				fieldLabel: '本次缴款(元)',
+				value: 0,
+			},{
+				xtype: 'radiogroup',
+		        fieldLabel: '付款方式',
+				itemId: 'payment',
+		        // Arrange radio buttons into two columns, distributed vertically
+		        //columns: 2,
+		        //vertical: true,
+		        items: [
+		            { boxLabel: '现金', name: 'pay', inputValue: '1' },
+		            { boxLabel: '刷卡', name: 'pay', inputValue: '2' },
+		            { boxLabel: '微信', name: 'pay', inputValue: '3' },
+					{ boxLabel: '支付宝', name: 'pay', inputValue: '4' }
+		        ],
+			}]
 		}],
 	},{
 		xtype: 'grid',
@@ -202,6 +225,19 @@ Ext.define('Youngshine.view.accnt.New', {
 	onSave: function(){
 		var me = this;  
 		
+		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
+			studentID = this.down('hiddenfield[name=studentID]').getValue().trim(),
+			wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
+			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
+			accntDate = this.down('datefield[name=accntDate]').getValue(), 
+			amount = this.down('displayfield[name=amount]').getValue(),
+			//amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
+			amount_now = this.down('numberfield[name=amount_now]').getValue(),
+			amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
+			note = this.down('textfield[name=note]').getValue().trim(),
+			consultID_owe = this.down('combo[name=consultID_owe]').getValue(),
+			consultName_owe = this.down('combo[name=consultID_owe]').getRawValue()
+
 		/*
 		console.log(this.down('radiogroup[itemId=accntType]').getChecked())
 		// 有无选中
@@ -224,21 +260,12 @@ Ext.define('Youngshine.view.accnt.New', {
 		payment = payment.boxLabel
 		console.log(payment)
 		
-		var studentName = this.down('textfield[name=studentName]').getValue().trim(),
-			studentID = this.down('hiddenfield[name=studentID]').getValue().trim(),
-			wxID = this.down('hiddenfield[name=wxID]').getValue().trim(),
-			//datetime.toLocaleDateString() // 0点0分，不准确，要转换toLocal
-			accntDate = this.down('datefield[name=accntDate]').getValue(), 
-			amount = this.down('numberfield[name=amount]').getValue(),
-			amount_owe = this.down('numberfield[name=amount_owe]').getValue(),
-			amount_ys = this.down('displayfield[name=amount_ys]').getValue(),
-			note = this.down('textfield[name=note]').getValue().trim(),
-			consultID_owe = this.down('combo[name=consultID_owe]').getValue(),
-			consultName_owe = this.down('combo[name=consultID_owe]').getRawValue()
-		
 		if (studentName == ''){
-			Ext.Msg.alert('提示','姓名不能空白！');
+			Ext.Msg.alert('提示','请选择学生！');
 			return;
+		}
+		if (amount_now == 0){
+			Ext.Msg.alert('提示','本次缴款为0');
 		}
 /*	可能关系户不收钱	
 		if (amount == 0){
@@ -276,21 +303,21 @@ Ext.define('Youngshine.view.accnt.New', {
 			"wxID": wxID, //发微信模版通知消息
 			"accntType": accntType,
 			"accntDate": accntDate,
-			"payment": payment,
 			"amount": amount,
 			"amount_ys": amount_ys,
-			"amount_owe": amount_owe,
+			"amount_now": amount_now, //本次缴款，保存到fee表
+			"payment": payment, //付款方式，保存到fee表
 			"note": note,	
 			"consultID_owe": consultID_owe,	//业绩归属
 			"consultName_owe": consultName_owe, //前端显示
-			"arrList": arrList, // 报读的多个课程列表					
+			"arrList": arrList, // 报读的多个课程列表（数组转字符串）					
 			"consultID": localStorage.consultID, //当前登录的咨询师
 			"schoolsubID": localStorage.schoolsubID,
 			"schoolID": localStorage.schoolID,
 		};
 		console.log(obj);
 
-		Ext.Msg.confirm('询问','缴费金额'+amount+'元。是否保存？',function(id){
+		Ext.Msg.confirm('询问','应缴金额'+amount+'元，本次缴款'+amount_now+'元。确认保存？',function(id){
 			if( id == "yes"){
 				//me.close();
 				me.fireEvent('save',obj,me); //后台数据判断，才能关闭  本窗口win
@@ -329,7 +356,7 @@ Ext.define('Youngshine.view.accnt.New', {
 		me.down('grid').getStore().remove(record); //store选择的排除，从 检测项目.. 
 		
 		var ys = me.down('displayfield[name=amount_ys]'),
-			ss = me.down('numberfield[name=amount]')
+			ss = me.down('displayfield[name=amount]')
 		ys.setValue ( parseInt(ys.getValue()) - parseInt(record.data.amount) )
 		ss.setValue ( parseInt(ss.getValue()) - parseInt(record.data.amount) )
 	},
@@ -352,6 +379,7 @@ Ext.define('Youngshine.view.accnt.New', {
 		} 
 		var store = Ext.getStore('Schoolsub'); 
 		store.removeAll();
+		store.clearFilter();
         var url = Youngshine.app.getApplication().dataUrl + 
 			'readSchoolsubList.php?data=' + JSON.stringify(obj);
 		store.getProxy().url = url;

@@ -13,7 +13,7 @@ Ext.define('Youngshine.view.accnt.List' ,{
 	maximized: true,
 	layout: 'fit',
 
-    title : '缴费退费',
+    title : '课程销售订单',
 
 	fbar: [{
 		xtype: 'textfield',
@@ -62,7 +62,7 @@ Ext.define('Youngshine.view.accnt.List' ,{
 	},'->',{	
 		xtype: 'button',
 		text: '＋新增',
-		tooltip: '添加缴费退费',
+		tooltip: '添加记录',
 		//disabled: true,
 		//scale: 'medium',
 		width: 55,
@@ -100,7 +100,7 @@ Ext.define('Youngshine.view.accnt.List' ,{
 			 menuDisabled: true,
 	         dataIndex: 'accntID'
 	     }, {
-	         text: '缴费日期',
+	         text: '日期',
 	         width: 80,
 			 menuDisabled: true,
 	         dataIndex: 'accntDate'
@@ -115,51 +115,47 @@ Ext.define('Youngshine.view.accnt.List' ,{
 	         width: 60,
 	         //sortable: false,
 			 menuDisabled: true,
-	         dataIndex: 'accntType'
+	         dataIndex: 'accntType'	 
 	     }, {
-	         text: '付款方式',
-	         width: 60,
-	         //sortable: false,
-			 menuDisabled: true,
-	         dataIndex: 'payment',
-			 align: 'center'	 
-	     }, {
-	         text: '应收(元)',
+	         text: '课程金额',
 	         width: 60,
 	         //sortable: false,
 			 menuDisabled: true,
 	         dataIndex: 'amount_ys',
 			 align: 'right'	
 	     }, {
-	         text: '实收',
+	         text: '打折(元)',
+	         width: 60,
+	         //sortable: false,
+			 menuDisabled: true,
+	         dataIndex: 'discount',
+			 align: 'right',
+			 renderer: function(value){
+		         if (value == 0) {
+		             return '';
+		         }
+		         return value;
+		     }	
+	     }, {
+	         text: '折后金额',
 	         width: 60,
 			 menuDisabled: true,
 	         dataIndex: 'amount',
 			 align: 'right'
 	     }, {
-	         text: '欠费',
-	         width: 50,
+	         text: '欠费(元)',
+	         width: 60,
+	         //sortable: false,
 			 menuDisabled: true,
-	         dataIndex: 'amount_owe',
+	         dataIndex: 'balance',
 			 align: 'right',
 			 renderer: function(value){
 		         if (value == 0) {
 		             return '';
 		         }
 		         return value;
-		     }
-	     }, {
-	         text: '入账',
-	         width: 50,
-			 menuDisabled: true,
-	         dataIndex: 'fullAmountPaid',
-			 align: 'right',
-			 renderer: function(value){
-		         if (value == 0) {
-		             return '';
-		         }
-		         return value;
-		     }
+		     }	
+
 	     }, {
 	         text: '归属咨询师',
 	         width: 80,
@@ -172,15 +168,39 @@ Ext.define('Youngshine.view.accnt.List' ,{
 	         dataIndex: 'note',
 	         //align: 'right',
 	         //renderer: Ext.util.Format.usMoney
-	     }, {
-	         text: '状态',
-	         width: 40,
-			 menuDisabled: true,
-	         dataIndex: 'current',
-			 renderer: function(value){
-		         return value == 1 ? '':'作废';
-		     }
 	         
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_pay_icon.png',
+				tooltip: '缴费记录',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onFee(rec); 
+				}	
+			}]
+			
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_kclist_icon.png',
+				tooltip: '课程明细记录',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onDetail(rec); 
+				}	
+			}]	
+			
 		},{	 
 			menuDisabled: true,
 			sortable: false,
@@ -213,22 +233,6 @@ Ext.define('Youngshine.view.accnt.List' ,{
 					grid.up('window').onDelete(rec); 
 				}	
 			}]	
-			
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_right_icon.png',
-				tooltip: '课程明细记录',
-				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮
-					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onDetail(rec); 
-				}	
-			}]	
  		 
 	     }],     
 	}],
@@ -248,11 +252,16 @@ Ext.define('Youngshine.view.accnt.List' ,{
 		
 		if(rec.data.current==0) return false
 			
-		Ext.Msg.confirm('提示','作废删除当前行？',function(btn){
+		Ext.Msg.confirm('提示','删除当前行？',function(btn){
 			if(btn == 'yes'){
 				me.fireEvent('del',rec);
 			}
 		});
+	},
+	
+	// 缴费明细，一个订单可能多次缴费
+	onFee: function(rec){ 
+		this.fireEvent('fee',rec);
 	},
 
 	// 缴费单的子表（课程明细）

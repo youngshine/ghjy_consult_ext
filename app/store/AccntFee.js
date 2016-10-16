@@ -1,7 +1,7 @@
-// 报读课程明细子表
-Ext.define('Youngshine.store.AccntDetail',{
+// 缴费明细子表
+Ext.define('Youngshine.store.AccntFee',{
     extend: 'Ext.data.Store',
-    model: 'Youngshine.model.AccntDetail',
+    model: 'Youngshine.model.AccntFee',
 	
     proxy: {
         type: 'jsonp',

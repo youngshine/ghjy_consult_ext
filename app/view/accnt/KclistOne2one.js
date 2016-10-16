@@ -109,7 +109,7 @@ Ext.define('Youngshine.view.accnt.KclistOne2one', {
 		store.insert(0,obj); //新增记录，0排在最前面
 		
 		var ys = me.parentView.down('displayfield[name=amount_ys]'),
-			ss = me.parentView.down('numberfield[name=amount]')
+			ss = me.parentView.down('displayfield[name=amount]')
 		
 		ys.setValue( parseInt(ys.getValue()) + parseInt(obj.amount) )
 		ss.setValue( parseInt(ss.getValue()) + parseInt(obj.amount) )
