@@ -50,17 +50,23 @@ Ext.define('Youngshine.view.teacher.List' ,{
 			 menuDisabled: true,
 	         dataIndex: 'teacherName'
 	     }, {
+	         text: '性别',
+	         width: 40,
+	         //sortable: false,
+			 menuDisabled: true,
+	         dataIndex: 'gender'
+	     }, {
+	         text: '电话',
+	         width: 100,
+	         //sortable: false,
+			 menuDisabled: true,
+	         dataIndex: 'phone'
+	     }, {
 	         text: '学科',
 	         width: 50,
 	         //sortable: false,
 			 menuDisabled: true,
 	         dataIndex: 'subjectName'
-	     }, {
-	         text: '校区',
-	         width: 100,
-	         //sortable: false,
-			 menuDisabled: true,
-	         dataIndex: 'schoolName'
 	     }, {
 	         text: '备注',
 	         flex: 1,
@@ -74,38 +80,17 @@ Ext.define('Youngshine.view.teacher.List' ,{
 			width: 30,
 			items: [{
 				//iconCls: 'add',
-				icon: 'resources/images/my_edit_icon.png',
-				tooltip: '修改',
+				icon: 'resources/images/my_kclist_icon.png',
+				tooltip: '课程表',
 				handler: function(grid, rowIndex, colIndex) {
-					//var me = this;
+					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);
 					//Ext.Msg.alert('Sell', 'Sell ' + rec.get('company'));
 					//me.fireEvent('adminEdit');
-					grid.up('window').onEdit(rec); 
-				}	
-			}]	
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_delete_icon.png',
-				tooltip: '删除',
-				handler: function(grid, rowIndex, colIndex) {
-					//var me = this;
-					var rec = grid.getStore().getAt(rowIndex);
-					//Ext.Msg.alert('Sell', 'Sell ' + rec.get('company'));
-					//Ext.Msg.confirm('提示','是否当前操作员？',function(btn){
-					//	if(btn == 'yes'){
-							//me.fireEvent('adminDelete');
-							grid.up('window').onDelete(rec); 
-					//	}
-					//});
+					grid.up('window').onKcb(rec); 
 				}	
 			}]				 		 
-	     }],     
+	    }],     
 	}],
 	
 	listeners: {
@@ -119,29 +104,31 @@ Ext.define('Youngshine.view.teacher.List' ,{
 		}
 	},
 
-	onNew: function(){ 
-		this.fireEvent('addnew');
-	},
-	onEdit: function(rec){ 
-		this.fireEvent('edit',rec);
-	},
-	/* 
-	onItemdblclick: function(view,record){
-		this.fireEvent('editUser',view,record);
-	},
-	onSelect: function(selModel, selections){
-		//this.fireEvent('selectUser',selModel, selections);
-		var delBut = this.down('button[action=delete]');
-        delBut.setDisabled(false);
-	}, */
 
-	onDelete: function(rec){
-		var me = this;
-		console.log(rec);
-		Ext.Msg.confirm('提示','是否删除当前行？',function(btn){
-			if(btn == 'yes'){
-				me.fireEvent('del',rec);
-			}
-		});
-	}
+	onKcb: function(record){ 
+		//this.fireEvent('kcb',record);
+		var obj = {
+			"teacherID": record.get('teacherID')
+		}
+		console.log(obj)
+        Ext.data.JsonP.request({
+            url: Youngshine.app.getApplication().dataUrl + 'readKcbByTeacher.php', 
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+                if(result.success){
+					console.log(result.data)
+					var arr = result.data,
+						title = ''
+					for(var i=0;i<arr.length;i++)
+						title += (i+1) + '、' + arr[i].kcType + '：' + 
+							arr[i].timely_list + '<br>';
+					Ext.MessageBox.alert('排课',title)
+                }
+            },
+        });
+	},
+
 });

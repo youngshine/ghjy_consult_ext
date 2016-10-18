@@ -19,14 +19,14 @@ Ext.define('Youngshine.view.accnt.Fee' ,{
 	parentRecord: null, // 父表参数传递，该学生信息
 
 	fbar: [{
-		xtype: 'label',
+/*		xtype: 'label',
 		html: '合计(元)：',
 	},{	
 		xtype: 'displayfield',
 		itemId: 'subtotal',
 		hidden: true
 		//padding: '0 0 0 5'	
-	},'->',{	
+	},'->',{	*/
 		xtype: 'button',
 		text: '＋添加',
 		tooltip: '添加缴费记录',

@@ -15,26 +15,7 @@ Ext.define('Youngshine.view.accnt.List' ,{
 
     title : '课程销售订单',
 
-	fbar: [{
-		xtype: 'textfield',
-		itemId : 'search',
-		width: 100,
-		//fieldLabel: '筛选',
-		//labelWidth: 30,
-		//labelAlign: 'right',
-		emptyText: '搜索姓名电话...',
-		enableKeyEvents: true,
-		listeners: {
-			keypress: function(field,e){
-				console.log(e.getKey())
-				if(e.getKey()=='13'){ //按Enter
-					var studentName = field.value,
-						accntType = field.up('window').down('combo[itemId=accntType]').getValue();
-					field.up('window').onFilter(accntType,studentName); 
-				}	
-			}
-		}
-	},{		
+	fbar: [{	
 		xtype: 'combo',
 		width: 100,
 		itemId: 'accntType',
@@ -48,7 +29,7 @@ Ext.define('Youngshine.view.accnt.List' ,{
 		},
 		valueField: 'value',
 		displayField: 'value',
-		//value: '全部年级',
+		emptyText: '课程类型',
 		//editable: false,
 		//padding: '5 0',
 		listeners: {
@@ -56,6 +37,25 @@ Ext.define('Youngshine.view.accnt.List' ,{
 				var accntType = newValue,
 					studentName = this.up('window').down('textfield[itemId=search]').getValue().trim();
 				this.up('window').onFilter(accntType,studentName); 
+			}
+		}	
+	},{	
+		xtype: 'textfield',
+		itemId : 'search',
+		width: 100,
+		//fieldLabel: '筛选',
+		//labelWidth: 30,
+		//labelAlign: 'right',
+		emptyText: '搜索姓名...',
+		enableKeyEvents: true,
+		listeners: {
+			keypress: function(field,e){
+				console.log(e.getKey())
+				if(e.getKey()=='13'){ //按Enter
+					var studentName = field.value,
+						accntType = field.up('window').down('combo[itemId=accntType]').getValue();
+					field.up('window').onFilter(accntType,studentName); 
+				}	
 			}
 		}
 
@@ -300,12 +300,12 @@ Ext.define('Youngshine.view.accnt.List' ,{
 		var studentName = new RegExp("/*" + studentName); // 正则表达式
 		var store = this.down('grid').getStore();
 		store.clearFilter(); // filter is additive
-		if(accntType != '' )
+		if(accntType != null )
 			store.filter([
 				{property: "accntType", value: accntType},
 				{property: "studentName", value: studentName}, // 姓名模糊查找？？
 			]);
-		if(accntType == '' )
+		if(accntType == null )
 			store.filter("studentName", studentName);
 	}
 });

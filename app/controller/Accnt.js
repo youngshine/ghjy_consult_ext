@@ -274,13 +274,16 @@ Ext.define('Youngshine.controller.Accnt', {
 		   wait: true,
 		   waitConfig: {interval:200},
 		});
-		console.log(record)
+		
+		var obj = {"accntID": record.data.accntID }
+		console.log(obj)
+		
 		Ext.Ajax.request({
 			// 删除服务端记录: 最好做个标记，别真正删除？或者过期的和定期的不能删除？
 			//url: this.getApplication().dataUrl + 'deleteAccnt.php',
-			url: this.getApplication().dataUrl + 'deleteOrders.php',
+			url: me.getApplication().dataUrl + 'deleteOrders.php',
 			//callbackKey: 'callback',
-			params: {"accntID": record.data.accntID },
+			params: obj,
 			success: function(response){
 				Ext.MessageBox.hide();
 				console.log(response.responseText)

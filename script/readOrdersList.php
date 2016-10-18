@@ -24,7 +24,8 @@ require_once('db/database_connection.php');
 		From `ghjy_accnt` a 
 		Join `ghjy_student` b On a.studentId=b.studentID 
 		Left Join `ghjy_consult` c On a.consultID_owe=c.consultID 
-		WHERE a.consultID = $consultID ";	 
+		WHERE a.consultID = $consultID 
+		Order By a.created Desc";	 
     $result = mysql_query($sql) 
 		or die("Invalid query: readOrdersList " . mysql_error());
 

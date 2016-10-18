@@ -845,6 +845,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.controller.Teacher": [],
   "Youngshine.model.Accnt": [],
   "Youngshine.model.AccntDetail": [],
+  "Youngshine.model.AccntFee": [],
   "Youngshine.model.Assess": [],
   "Youngshine.model.Classes": [],
   "Youngshine.model.ClassesStudent": [],
@@ -861,6 +862,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.model.Zsd": [],
   "Youngshine.store.Accnt": [],
   "Youngshine.store.AccntDetail": [],
+  "Youngshine.store.AccntFee": [],
   "Youngshine.store.Assess": [],
   "Youngshine.store.Classes": [],
   "Youngshine.store.ClassesStudent": [],
@@ -880,6 +882,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.view.Viewport": [],
   "Youngshine.view.West": [],
   "Youngshine.view.accnt.Edit": [],
+  "Youngshine.view.accnt.Fee": [],
+  "Youngshine.view.accnt.FeeNew": [],
   "Youngshine.view.accnt.KclistClass": [],
   "Youngshine.view.accnt.KclistOne2one": [],
   "Youngshine.view.accnt.KclistRefund": [],
@@ -1929,6 +1933,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.controller.Teacher": [],
   "Youngshine.model.Accnt": [],
   "Youngshine.model.AccntDetail": [],
+  "Youngshine.model.AccntFee": [],
   "Youngshine.model.Assess": [],
   "Youngshine.model.Classes": [],
   "Youngshine.model.ClassesStudent": [],
@@ -1945,6 +1950,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.model.Zsd": [],
   "Youngshine.store.Accnt": [],
   "Youngshine.store.AccntDetail": [],
+  "Youngshine.store.AccntFee": [],
   "Youngshine.store.Assess": [],
   "Youngshine.store.Classes": [],
   "Youngshine.store.ClassesStudent": [],
@@ -1971,6 +1977,12 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Youngshine.view.accnt.Edit": [
     "widget.accnt-edit"
+  ],
+  "Youngshine.view.accnt.Fee": [
+    "widget.accnt-fee"
+  ],
+  "Youngshine.view.accnt.FeeNew": [
+    "widget.fee-new"
   ],
   "Youngshine.view.accnt.KclistClass": [
     "widget.kclist"
