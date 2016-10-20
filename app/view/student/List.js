@@ -334,7 +334,7 @@ Ext.define('Youngshine.view.student.List' ,{
 							arr[i].timely_list + '<br>';
 					Ext.MessageBox.alert('排课',title)
 					*/
-					var weekdays = ['周一','周二','周三','周四','周五','周六','周日']
+					
 					var arr = []
 					result.data.forEach(function (item) {
 						var timely_list = item.timely_list.split(',')
@@ -347,11 +347,23 @@ Ext.define('Youngshine.view.student.List' ,{
 					console.log(arr)
 					
 					var title = ''
+					var weekdays = ['周一','周二','周三','周四','周五','周六','周日']
 					Ext.Array.each(weekdays, function(weekday,index){     
-						console.log(weekday)
+						var grp = ''
 						for(var i=0;i<arr.length;i++){
 							if(arr[i].indexOf(weekday)>=0){
-								title += '•' + arr[i] + '<br>';
+								if(grp != weekday){
+									grp = weekday; console.log(i)
+									if(title==''){
+										title +=  grp + '：' + arr[i].substr(2) 
+									}else{
+										title +=  '<br>' + grp + '：' + arr[i].substr(2) 
+									}
+									
+								}else{
+									title +=  '、' + arr[i].substr(2) 
+								}
+								//title += '•' + arr[i] + '<br>';
 							}
 						}
 					});
