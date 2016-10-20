@@ -185,11 +185,26 @@ Ext.define('Youngshine.view.student.List' ,{
 			items: [{
 				//iconCls: 'add',
 				icon: 'resources/images/my_orders_icon.png',
-				tooltip: '购买单',
+				tooltip: '购买记录',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);
 					grid.up('window').onAccnt(rec); 
+				}	
+			}]
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_timely_icon.png',
+				tooltip: '排课',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onKcb(rec); 
 				}	
 			}]
 		},{	 
@@ -293,6 +308,58 @@ Ext.define('Youngshine.view.student.List' ,{
 				});
 		    }
 		});	
+	},
+	
+	// 排课：大小班，一对一
+	onKcb: function(record){ 
+		//this.fireEvent('kcb',record);
+		var obj = {
+			"studentID": record.get('studentID')
+		}
+		console.log(obj)
+        Ext.data.JsonP.request({
+            url: Youngshine.app.getApplication().dataUrl + 'readKcbByStudent.php', 
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+                if(result.success){
+					console.log(result.data)
+					/*
+					var arr = result.data,
+						title = ''
+					for(var i=0;i<arr.length;i++)
+						title += (i+1) + '、' + arr[i].kcType + '：' + 
+							arr[i].timely_list + '<br>';
+					Ext.MessageBox.alert('排课',title)
+					*/
+					var weekdays = ['周一','周二','周三','周四','周五','周六','周日']
+					var arr = []
+					result.data.forEach(function (item) {
+						var timely_list = item.timely_list.split(',')
+						Ext.Array.each(timely_list, function(timely, index, countriesItSelf) {
+						    console.log(timely);
+							arr.push(timely + '【'+item.kcType + '】' )  
+						});
+						//time = timely_list.concat(item.timely_list)
+					});
+					console.log(arr)
+					
+					var title = ''
+					Ext.Array.each(weekdays, function(weekday,index){     
+						console.log(weekday)
+						for(var i=0;i<arr.length;i++){
+							if(arr[i].indexOf(weekday)>=0){
+								title += '•' + arr[i] + '<br>';
+							}
+						}
+					});
+					
+					Ext.MessageBox.alert('排课',title)
+                }
+            },
+        });
 	},
 	
 	onFilter: function(grade,studentName){

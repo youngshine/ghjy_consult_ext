@@ -14,7 +14,7 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 	//maximized: true,
 	layout: 'fit',
 
-    title : '一对一排课',
+    title : '一对一报读课程',
 
 	fbar: [{
 		xtype: 'textfield',
@@ -116,7 +116,7 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 			items: [{
 				//iconCls: 'add',
 				icon: 'resources/images/my_right_icon.png',
-				tooltip: '排课',
+				tooltip: '知识点',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮当前选择行？？？不是自动？
 					var rec = grid.getStore().getAt(rowIndex);
@@ -130,7 +130,7 @@ Ext.define('Youngshine.view.one2one.Pk' ,{
 		
 		listeners: {
 			itemclick: function( grid, record, item, index, e, eOpts ){
-				grid.up('window').onStudy(record);
+				//grid.up('window').onStudy(record);
 			}
 		}       
 	}],

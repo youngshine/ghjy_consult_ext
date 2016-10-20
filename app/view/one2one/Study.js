@@ -116,7 +116,7 @@ Ext.define('Youngshine.view.one2one.Study' ,{
 			width: 30,
 			items: [{
 				//iconCls: 'add',
-				icon: 'resources/images/my_input_icon.png',
+				icon: 'resources/images/my_timely_icon.png',
 				tooltip: '排课',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高粱
