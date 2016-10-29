@@ -19,7 +19,7 @@ require_once('db/database_connection.php');
 		From `ghjy_accnt_detail` a 
 		Join `ghjy_accnt` b On b.accntID=a.accntID 
 		Join `ghjy_student` c On c.studentId=b.studentID 
-		WHERE b.consultID = $consultID And b.accntType='$accntType' "; 
+		WHERE b.consultID = $consultID And b.accntType='$accntType' And a.isClassed=0 "; 
 	$result = mysql_query($sql) 
 		or die("Invalid query: readAccntDetailList By 1to1 " . mysql_error());
 

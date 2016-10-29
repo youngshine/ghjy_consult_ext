@@ -23,8 +23,8 @@ Ext.define('Youngshine.view.West', {
 			'<div class="menuitem" title="accnt" style="margin:5px;">销售课程</div>'+
 		
 			'<div style="margin:10px 0;cursor:auto;"><hr color=#eee /></div>'+
-			'<div class="menuitem" title="one2onePk" style="margin:5px;">一对一排课</div>'+
-			'<div class="menuitem" title="classesPk" style="margin:5px;">待分班排课</div>'+
+			'<div class="menuitem" title="classesPk" style="margin:5px;">待分班排课</div>'+		
+			'<div class="menuitem" title="one2nPk" style="margin:5px;">待一对N排课</div>'+
 		
 			'<div style="margin:10px 0;cursor:auto;"><hr color=#eee /></div>'+
 			'<div class="menuitem" title="classes" style="margin:5px;">大小班级管理</div>'+
