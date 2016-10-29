@@ -12,15 +12,30 @@ Ext.define('Youngshine.view.teacher.List' ,{
 	modal: true,
     autoShow: true,
 	//resizable: false,
-	width: 650,
-	height: 450,
+	width: 800,
+	height: 600,
 	layout: 'fit',
 
-    title : '教师列表',
+    title : '教师课程表',
 	
-	fbar: [
-		'->',
-	{
+	fbar: [{
+		xtype: 'textfield',
+		itemId : 'search',
+		width: 100,
+		//fieldLabel: '筛选',
+		//labelWidth: 30,
+		//labelAlign: 'right',
+		emptyText: '搜索姓名...',
+		enableKeyEvents: true,
+		listeners: {
+			keypress: function(field,e){
+				console.log(e.getKey())
+				if(e.getKey()=='13'){ //按Enter
+					field.up('window').onFilter(field.value); 
+				}	
+			}
+		}
+	},'->',{
 		xtype: 'button', hidden: true,
 		text: '＋添加',
 		width: 65,
@@ -68,6 +83,12 @@ Ext.define('Youngshine.view.teacher.List' ,{
 			 menuDisabled: true,
 	         dataIndex: 'subjectName'
 	     }, {
+	         text: '一对N上课时间列表',
+	         width: 250,
+	         sortable: false,
+			 menuDisabled: true,
+	         dataIndex: 'timely_list_one2n'
+	     }, {
 	         text: '备注',
 	         flex: 1,
 	         sortable: false,
@@ -89,7 +110,24 @@ Ext.define('Youngshine.view.teacher.List' ,{
 					//me.fireEvent('adminEdit');
 					grid.up('window').onKcb(rec); 
 				}	
-			}]				 		 
+			}]		
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_user_icon.png',
+				tooltip: '一对一',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					//Ext.Msg.alert('Sell', 'Sell ' + rec.get('company'));
+					//me.fireEvent('adminEdit');
+					grid.up('window').onKcb(rec); 
+				}	
+			}]			 		 
 	    }],     
 	}],
 	
@@ -104,7 +142,14 @@ Ext.define('Youngshine.view.teacher.List' ,{
 		}
 	},
 
-
+	onFilter: function(val){
+		var me = this;
+		var value = new RegExp("/*" + val); // 正则表达式
+		var store = this.down('grid').getStore();
+		store.clearFilter(); // filter is additive
+		store.filter("teacherName", value);
+	},
+	
 	onKcb: function(record){ 
 		//this.fireEvent('kcb',record);
 		var obj = {
