@@ -16,9 +16,18 @@ $arr = $req->params;
 $teacherID = $arr->teacherID;
 //$teacherID = $_REQUEST['teacherID']; //userId
 
+/*
 $sql = "SELECT teacherID,timely_list,'一对一' As kcType 
 	FROM `ghjy_student-study` 
 	WHERE teacherID=$teacherID And pass=0 
+Union All 
+	SELECT teacherID,timely_list,'大小班' As kcType 
+	FROM `ghjy_class` 
+	WHERE teacherID=$teacherID And current=1 ";
+*/
+$sql = "SELECT teacherID,timely_list_one2n AS timely_list,'一对一' As kcType 
+	FROM `ghjy_teacher` 
+	WHERE teacherID=$teacherID 
 Union All 
 	SELECT teacherID,timely_list,'大小班' As kcType 
 	FROM `ghjy_class` 

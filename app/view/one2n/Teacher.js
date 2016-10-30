@@ -83,9 +83,24 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 					var rec = grid.getStore().getAt(rowIndex);
 					//Ext.Msg.alert('Sell', 'Sell ' + rec.get('company'));
 					//me.fireEvent('adminEdit');
-					grid.up('window').onTimely(rec); 
+					grid.up('window').onOne2nKcb(rec); 
 				}	
 			}]	 
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_user_icon.png',
+				tooltip: '学生',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮当前选择行？？？不是自动？
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onOne2nStudent(rec); 
+				}	
+			}]
 	    }],  
 		 
  		listeners: {
@@ -116,7 +131,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 			return;
 		}
 
-		Ext.Msg.confirm('询问','教师：'+teacherName + '<br>时间：' + timely_list + 
+		Ext.Msg.confirm('询问','时间：'+timely_list + '<br>教师：' + teacherName + 
 			'<hr>确认排课？',function(btn){
 			if(btn == 'yes'){
 				var obj = {
@@ -132,10 +147,10 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 		
 	},
 	
-	// 调整上课时间，设定的列表，只能减少，不能增加
-	onTimely: function(record){
+	// 调整一对一上课时间，设定的列表，只能减少，不能增加
+	onOne2nKcb: function(record){
 		var me = this;
-		var win = Ext.create('Youngshine.view.one2n.Kcb');
+		var win = Ext.create('Youngshine.view.one2n.One2nKcb');
 		//win.down('form').loadRecord(record); //binding data
 		win.parentRecord = record // 传递参数
 		win.parentView = me 
@@ -157,6 +172,31 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 		}
 		console.log(timely);
 		win.down('grid').getStore().loadData(timely)
-
 	},
+	
+	// 该教师的一对N学生
+	onOne2nStudent: function(record){
+		var me = this;
+		var obj = {
+			teacherID: record.data.teacherID
+		}
+		console.log(obj)
+        Ext.data.JsonP.request({
+            url: Youngshine.app.getApplication().dataUrl + 'readOne2nStudent.php', 
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+                if(result.success){
+					console.log(result.data)
+					var arr = result.data,
+						title = ''
+					for(var i=0;i<arr.length;i++)
+						title += (i+1) + '、' + arr[i].studentName + '：' + arr[i].timely_list;
+					Ext.MessageBox.alert('一对N学生列表',title)
+                }
+            },
+        });
+	}
 });

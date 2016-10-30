@@ -1,4 +1,4 @@
-Ext.define('Youngshine.view.one2n.Kcb', {
+Ext.define('Youngshine.view.one2n.One2nKcb', {
     extend: 'Ext.window.Window',
     alias : 'widget.one2n-kcb',
 	
@@ -9,7 +9,7 @@ Ext.define('Youngshine.view.one2n.Kcb', {
     //layout: 'fit',
 	width: 350,
 	//height: 300,
-	title : '调整上课时间',
+	title : '调整一对N上课时间',
 	
 	parentRecord: null, //parent view
 	parentView: null,
@@ -30,7 +30,7 @@ Ext.define('Youngshine.view.one2n.Kcb', {
 	
 	items: [{
 		xtype: 'grid',
-		height: 150,
+		height: 250,
 		tripeRows: true,
 		store: Ext.create('Ext.data.Store', {
 			fields: [

@@ -35,29 +35,6 @@ Ext.define('Youngshine.view.one2n.Pk' ,{
 				}	
 			}
 		}
-	},{		
-		xtype: 'combo',
-		width: 100,
-		itemId: 'isClassed',
-		store: {
-			fields: ['value','text'],
-			data : [
-				{"value":0,"text":"未排课"},
-				{"value":1,"text":"已排课"},
-			]
-		},
-		valueField: 'value',
-		displayField: 'text',
-		emptyText: '排课状态',
-		editable: false,
-		//padding: '5 0',
-		listeners: {
-			change: function(cb,newValue){
-				var isClassed = newValue,
-					title = this.up('window').down('textfield[itemId=search]').getValue().trim();
-				this.up('window').onFilter(title,isClassed); 
-			}
-		}
 
 	},'->',{	
 		xtype: 'button',
@@ -144,17 +121,11 @@ Ext.define('Youngshine.view.one2n.Pk' ,{
 		this.fireEvent('teacher',rec);
 	},
 	
-	onFilter: function(title,isClassed){
-		var me = this; console.log(isClassed)
-		var title = new RegExp("/*" + title); // 正则表达式
+	onFilter: function(val){
+		var me = this; 
+		var title = new RegExp("/*" + val); // 正则表达式
 		var store = this.down('grid').getStore();
 		store.clearFilter(); // filter is additive
-		if(isClassed != null )
-			store.filter([
-				{property: "isClassed", value: isClassed},
-				{property: "title", value: title}, // 姓名模糊查找？？
-			]);
-		if(isClassed == null )
-			store.filter("title", title);
+		store.filter("title", title);
 	}
 });

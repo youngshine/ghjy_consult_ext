@@ -119,13 +119,11 @@ Ext.define('Youngshine.view.teacher.List' ,{
 			items: [{
 				//iconCls: 'add',
 				icon: 'resources/images/my_user_icon.png',
-				tooltip: '一对一',
+				tooltip: '一对N学生',
 				handler: function(grid, rowIndex, colIndex) {
 					grid.getSelectionModel().select(rowIndex); // 高亮
 					var rec = grid.getStore().getAt(rowIndex);
-					//Ext.Msg.alert('Sell', 'Sell ' + rec.get('company'));
-					//me.fireEvent('adminEdit');
-					grid.up('window').onKcb(rec); 
+					grid.up('window').onOne2nStudent(rec); 
 				}	
 			}]			 		 
 	    }],     
@@ -213,4 +211,29 @@ Ext.define('Youngshine.view.teacher.List' ,{
         });
 	},
 
+	// 该教师的一对N学生
+	onOne2nStudent: function(record){
+		var me = this;
+		var obj = {
+			teacherID: record.data.teacherID
+		}
+		console.log(obj)
+        Ext.data.JsonP.request({
+            url: Youngshine.app.getApplication().dataUrl + 'readOne2nStudent.php', 
+            callbackKey: 'callback',
+            params:{
+                data: JSON.stringify(obj)
+            },
+            success: function(result){
+                if(result.success){
+					console.log(result.data)
+					var arr = result.data,
+						title = ''
+					for(var i=0;i<arr.length;i++)
+						title += (i+1) + '、' + arr[i].studentName + '：' + arr[i].timely_list;
+					Ext.MessageBox.alert('一对N学生列表',title)
+                }
+            },
+        });
+	}
 });
