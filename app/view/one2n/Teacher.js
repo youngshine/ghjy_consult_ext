@@ -96,7 +96,8 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 				icon: 'resources/images/my_user_icon.png',
 				tooltip: '学生',
 				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮当前选择行？？？不是自动？
+					//stopPropagation();
+					//grid.getSelectionModel().select(rowIndex); // 高亮当前选择行？？？不是自动？
 					var rec = grid.getStore().getAt(rowIndex);
 					grid.up('window').onOne2nStudent(rec); 
 				}	
@@ -106,7 +107,12 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
  		listeners: {
  			selectionchange: function(selModel, selections){
  				this.up('window').onSelectionChange(selModel, selections);
- 			}
+ 			},
+			
+			// 一定要调整时间，同点击按钮
+			itemclick: function( grid, record, item, index, e, eOpts ){
+				grid.up('window').onOne2nKcb(record);
+			}
  		}     
 	}],
 
@@ -193,7 +199,8 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 					var arr = result.data,
 						title = ''
 					for(var i=0;i<arr.length;i++)
-						title += (i+1) + '、' + arr[i].studentName + '：' + arr[i].timely_list;
+						title += (i+1) + '、' + arr[i].studentName + '：' + 
+							arr[i].timely_list + '<br>';
 					Ext.MessageBox.alert('一对N学生列表',title)
                 }
             },

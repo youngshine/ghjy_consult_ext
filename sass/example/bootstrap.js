@@ -838,6 +838,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.controller.Kcb": [],
   "Youngshine.controller.Kclist": [],
   "Youngshine.controller.Main": [],
+  "Youngshine.controller.One2n": [],
   "Youngshine.controller.One2one": [],
   "Youngshine.controller.Pay": [],
   "Youngshine.controller.Schoolsub": [],
@@ -908,6 +909,9 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.view.kcb.Student": [],
   "Youngshine.view.login.Login": [],
   "Youngshine.view.login.Pswreset": [],
+  "Youngshine.view.one2n.One2nKcb": [],
+  "Youngshine.view.one2n.Pk": [],
+  "Youngshine.view.one2n.Teacher": [],
   "Youngshine.view.one2one.Kcb": [],
   "Youngshine.view.one2one.Pk": [],
   "Youngshine.view.one2one.Study": [],
@@ -929,7 +933,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.view.study.Zsd": [],
   "Youngshine.view.teacher.Edit": [],
   "Youngshine.view.teacher.List": [],
-  "Youngshine.view.teacher.New": []
+  "Youngshine.view.teacher.New": [],
+  "Youngshine.view.teacher.One2nStudent": []
 });
 Ext.ClassManager.addNameAliasMappings({
   "Ext.AbstractComponent": [],
@@ -1926,6 +1931,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.controller.Kcb": [],
   "Youngshine.controller.Kclist": [],
   "Youngshine.controller.Main": [],
+  "Youngshine.controller.One2n": [],
   "Youngshine.controller.One2one": [],
   "Youngshine.controller.Pay": [],
   "Youngshine.controller.Schoolsub": [],
@@ -2056,6 +2062,15 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.view.login.Pswreset": [
     "widget.pswreset"
   ],
+  "Youngshine.view.one2n.One2nKcb": [
+    "widget.one2n-kcb"
+  ],
+  "Youngshine.view.one2n.Pk": [
+    "widget.one2n-pk"
+  ],
+  "Youngshine.view.one2n.Teacher": [
+    "widget.one2n-teacher"
+  ],
   "Youngshine.view.one2one.Kcb": [
     "widget.one2one-kcb"
   ],
@@ -2121,6 +2136,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "Youngshine.view.teacher.New": [
     "widget.teacher-new"
+  ],
+  "Youngshine.view.teacher.One2nStudent": [
+    "widget.one2n-student"
   ]
 });
 Ext.setVersion("ext-theme-base", "4.2.1");

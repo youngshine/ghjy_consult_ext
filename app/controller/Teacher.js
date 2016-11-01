@@ -15,7 +15,10 @@ Ext.define('Youngshine.controller.Teacher', {
 		selector: 'teacher-new'
 	},{
 		ref: 'teacheredit',
-		selector: 'teacher-edit'	
+		selector: 'teacher-edit'
+	},{
+		ref: 'one2nstudent',
+		selector: 'one2n-student'	
 	}],
 
     init: function() {
@@ -24,13 +27,17 @@ Ext.define('Youngshine.controller.Teacher', {
 				addnew: this.teacherNew,
 				edit: this.teacherEdit, //自定义事件 user...
 				del: this.teacherDelete,
+				one2nstudent: this.teacherOne2nstudent //一对多学生
             },
 			'teacher-edit': {
 				save: this.teachereditSave, 
             },
 			'teacher-new': {
                 save: this.teachernewSave,
-            }				
+            },
+			'one2n-student': {
+                del: this.one2nstudentDelete,
+            },				
         });
     },
 
@@ -205,5 +212,52 @@ Ext.define('Youngshine.controller.Teacher', {
 				Ext.Msg.alert('网络错误','服务请求失败');
 			}
 		});	
+	},	
+	
+	// 一对多学生
+    teacherOne2nstudent: function(record) {
+		var me = this;
+		me.one2nstudent = Ext.create('Youngshine.view.teacher.One2nStudent')
+		me.one2nstudent.parentRecord = record // 传递参数
+
+		var obj = {
+			"teacherID": record.data.teacherID
+		}
+	    var url = this.getApplication().dataUrl + 
+			'readOne2nStudent.php?data=' + JSON.stringify(obj);
+	    var store = Ext.getStore('Student');
+		store.removeAll();
+		store.clearFilter();
+		store.getProxy().url = url;
+	    store.load({
+	        callback: function(records, operation, success) {
+				console.log(records);
+	        },
+	        scope: this
+	    });
+    },
+	
+	// 移出学生（不是真正删除??，才能统计原来上课，用点名表）
+	one2nstudentDelete: function( record,oldView )	{
+    	var me = this; 
+		
+		var obj = {
+			one2nstudentID: record.data.one2nstudentID, // unique删除
+			studentID: record.data.studentID,
+			teacherID: record.data.teacherID,
+			accntdetailID: record.data.accntdetailID //用于更改排班状态isClassed=0
+		};
+		console.log(obj)
+		
+		Ext.Ajax.request({
+            url: me.getApplication().dataUrl + 'deleteOne2nStudent.php',
+            params: obj,
+            success: function(response){
+				var ret = Ext.JSON.decode(response.responseText)	
+				Ext.Msg.alert('提示','学生成功移出到待一对N排课！');
+				// 消除本行
+				oldView.down('grid').getStore().remove(record)
+			},
+        });
 	},	
 });

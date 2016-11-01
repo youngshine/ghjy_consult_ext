@@ -213,6 +213,9 @@ Ext.define('Youngshine.view.teacher.List' ,{
 
 	// 该教师的一对N学生
 	onOne2nStudent: function(record){
+		this.fireEvent('one2nstudent',record,me);
+		return 
+		
 		var me = this;
 		var obj = {
 			teacherID: record.data.teacherID
@@ -230,7 +233,8 @@ Ext.define('Youngshine.view.teacher.List' ,{
 					var arr = result.data,
 						title = ''
 					for(var i=0;i<arr.length;i++)
-						title += (i+1) + '、' + arr[i].studentName + '：' + arr[i].timely_list;
+						title += (i+1) + '、' + arr[i].studentName + '：' + 
+							arr[i].timely_list + '<br>';
 					Ext.MessageBox.alert('一对N学生列表',title)
                 }
             },

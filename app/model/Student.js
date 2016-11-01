@@ -17,6 +17,8 @@ Ext.define('Youngshine.model.Student', {
 		{name: 'schoolsubID'}, //分校区
 		{name: 'schoolsub'}, // fullname
 		
+		{name: 'timely_list'}, // 一对多上课时间列表？？
+		
 		{name: 'current'}, // 禁用
 		{name: 'created'}, // 录入时间，排序用
 
