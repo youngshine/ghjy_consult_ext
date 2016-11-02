@@ -225,7 +225,7 @@ Ext.define('Youngshine.controller.Teacher', {
 		}
 	    var url = this.getApplication().dataUrl + 
 			'readOne2nStudent.php?data=' + JSON.stringify(obj);
-	    var store = Ext.getStore('Student');
+	    var store = Ext.getStore('One2nStudent');
 		store.removeAll();
 		store.clearFilter();
 		store.getProxy().url = url;

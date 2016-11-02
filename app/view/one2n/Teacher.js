@@ -14,7 +14,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 	//maximized: true,
 	layout: 'fit',
 
-    title : '一对N教师列表',
+    title : '选择一对N教师',
 	
 	parentRecord: null, //父表参数
 
@@ -70,7 +70,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 			menuDisabled: true,
 			dataIndex: 'timely_list_one2n'	
 		},{	 
-			menuDisabled: true,
+			menuDisabled: true, hidden: true,
 			sortable: false,
 			xtype: 'actioncolumn',
 			width: 30,
@@ -87,7 +87,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 				}	
 			}]	 
 		},{	 
-			menuDisabled: true,
+			menuDisabled: true, hidden: true,
 			sortable: false,
 			xtype: 'actioncolumn',
 			width: 30,
@@ -116,7 +116,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
  		}     
 	}],
 
-	// 和上面双击选中效果一样
+	// ok button
 	onSelection: function(rec){ 
 		var me = this;
 		this.chooseItem(rec);
@@ -131,7 +131,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 		var me = this; console.log(record.data)
 
 		var teacherName = record.data.teacherName,
-			timely_list = record.data.timely_list_one2n.trim()
+			timely_list = record.data.timely_list_one2n
 		if (timely_list == ''){	
 			Ext.Msg.alert('提示','不能没有上课时间！');
 			return;
@@ -141,10 +141,11 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 			'<hr>确认排课？',function(btn){
 			if(btn == 'yes'){
 				var obj = {
-					teacherID: record.data.teacherID,
-					timely_list: timely_list,
-					studentID: me.parentRecord.data.studentID,
-					accntdetailID: me.parentRecord.data.accntdetailID //更改状态
+					teacherID    : record.data.teacherID,
+					timely_list  : timely_list,
+					studentID    : me.parentRecord.data.studentID,
+					accntdetailID: me.parentRecord.data.accntdetailID, //更改状态
+					kclistID     : me.parentRecord.data.kclistID,
 			    }
 				console.log(obj)
 				me.fireEvent('choose',obj,me.parentRecord,me);
@@ -156,7 +157,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 	// 调整一对一上课时间，设定的列表，只能减少，不能增加
 	onOne2nKcb: function(record){
 		var me = this;
-		var win = Ext.create('Youngshine.view.one2n.One2nKcb');
+		var win = Ext.create('Youngshine.view.one2n.Kcb');
 		//win.down('form').loadRecord(record); //binding data
 		win.parentRecord = record // 传递参数
 		win.parentView = me 
@@ -174,7 +175,7 @@ Ext.define('Youngshine.view.one2n.Teacher' ,{
 			var w = timely_list[i].substr(0,2),
 				h = timely_list[i].substr(2,2),
 				m = timely_list[i].substr(5,2)
-			timely.push( {"w":w,"h":h,"m":m}  )
+			timely.push( {"w":w,"h":h,"m":m,"check":false}  )
 		}
 		console.log(timely);
 		win.down('grid').getStore().loadData(timely)

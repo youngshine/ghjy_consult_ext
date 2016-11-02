@@ -19,7 +19,7 @@ $result = mysql_query($query)
 	or die("Invalid query: deleteOne2nStudent" . mysql_error());
 
 // 同时放入待排一对多 update accntdetail set isClassed=0
-$query = "UPDATE `ghjy_accnt_detail` SET isClassed=0 
+$query = "UPDATE `ghjy_accnt_detail` SET isClassed = 0 
 	Where accntdetailID = $accntdetailID ";
 $result = mysql_query($query) 
 	or die("Invalid query: updateAccntDetail by isClassed" . mysql_error());

@@ -38,7 +38,7 @@ Ext.define('Youngshine.view.teacher.One2nStudent' ,{
 		stripeRows: true,
 		//allowDeselect: true,
 		//selType: 'cellmodel',
-		store: 'Student',
+		store: 'One2nStudent',
 	    columns: [{
 			xtype: 'rownumberer',
 		},{	
@@ -81,11 +81,11 @@ Ext.define('Youngshine.view.teacher.One2nStudent' ,{
 	onDelete: function(rec){
 		var me = this; console.log(rec)
 		if (me.parentRecord.data.consultID != localStorage.consultID){
-			Ext.Msg.alert('提示','非班级创建人，不能操作！');
-			return;
+			Ext.Msg.alert('提示','咨询主管权限');
+			//return;
 		}
 		
-		Ext.Msg.confirm('提示','是否移出当前学生（退班）？',function(btn){
+		Ext.Msg.confirm('提示','是否把学生移出一对多（重新排课或退费）？',function(btn){
 			if(btn == 'yes'){
 				me.fireEvent('del',rec,me);
 			}

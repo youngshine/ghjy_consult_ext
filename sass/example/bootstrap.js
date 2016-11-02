@@ -9,7 +9,8 @@ Ext.Loader.addClassPathMappings({
   "Ext.Msg": "../../ext/src/window/MessageBox.js",
   "Ext.rtl.EventObjectImpl": "../../ext/src/rtl/EventObject.js",
   "KitchenSink": "../../app",
-  "Youngshine": "../../app"
+  "Youngshine": "../../app",
+  "Youngshine.view.one2n.One2nKcb": "../../app/view/one2n/One2nKcb-x.js"
 });
 Ext.ClassManager.addNameAlternateMappings({
   "Ext.AbstractComponent": [],
@@ -854,6 +855,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.model.Followup": [],
   "Youngshine.model.Kcb": [],
   "Youngshine.model.Kclist": [],
+  "Youngshine.model.One2nStudent": [],
   "Youngshine.model.School": [],
   "Youngshine.model.Schoolsub": [],
   "Youngshine.model.Student": [],
@@ -872,6 +874,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.store.Followup": [],
   "Youngshine.store.Kcb": [],
   "Youngshine.store.Kclist": [],
+  "Youngshine.store.One2nStudent": [],
   "Youngshine.store.School": [],
   "Youngshine.store.Schoolsub": [],
   "Youngshine.store.Student": [],
@@ -909,6 +912,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Youngshine.view.kcb.Student": [],
   "Youngshine.view.login.Login": [],
   "Youngshine.view.login.Pswreset": [],
+  "Youngshine.view.one2n.Kcb": [],
   "Youngshine.view.one2n.One2nKcb": [],
   "Youngshine.view.one2n.Pk": [],
   "Youngshine.view.one2n.Teacher": [],
@@ -1947,6 +1951,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.model.Followup": [],
   "Youngshine.model.Kcb": [],
   "Youngshine.model.Kclist": [],
+  "Youngshine.model.One2nStudent": [],
   "Youngshine.model.School": [],
   "Youngshine.model.Schoolsub": [],
   "Youngshine.model.Student": [],
@@ -1965,6 +1970,7 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.store.Followup": [],
   "Youngshine.store.Kcb": [],
   "Youngshine.store.Kclist": [],
+  "Youngshine.store.One2nStudent": [],
   "Youngshine.store.School": [],
   "Youngshine.store.Schoolsub": [],
   "Youngshine.store.Student": [],
@@ -2062,8 +2068,11 @@ Ext.ClassManager.addNameAliasMappings({
   "Youngshine.view.login.Pswreset": [
     "widget.pswreset"
   ],
-  "Youngshine.view.one2n.One2nKcb": [
+  "Youngshine.view.one2n.Kcb": [
     "widget.one2n-kcb"
+  ],
+  "Youngshine.view.one2n.One2nKcb": [
+    "widget.one2n-kcb-x"
   ],
   "Youngshine.view.one2n.Pk": [
     "widget.one2n-pk"

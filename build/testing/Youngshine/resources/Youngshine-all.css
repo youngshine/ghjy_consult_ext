@@ -5040,6 +5040,12 @@ div.x-editor {
   font-size: 0;
 }
 
+/* line 1, ../../../../ext/packages/ext-theme-base/sass/src/grid/column/CheckColumn.scss */
+.x-grid-cell-inner-checkcolumn {
+  line-height: 0;
+  font-size: 0;
+}
+
 /* line 1, ../../../../ext/packages/ext-theme-base/sass/src/grid/column/RowNumberer.scss */
 .x-row-numberer .x-column-header-inner {
   text-overflow: clip;
@@ -14568,6 +14574,33 @@ a.x-monthpicker-item-inner:hover {
   height: 16px;
   width: 16px;
   cursor: pointer;
+}
+
+/* line 1, ../../../../ext/packages/ext-theme-neutral/sass/src/grid/column/CheckColumn.scss */
+.x-grid-cell-inner-checkcolumn {
+  padding: 4px 6px 3px 6px;
+}
+/* line 5, ../../../../ext/packages/ext-theme-neutral/sass/src/grid/column/CheckColumn.scss */
+.x-grid-no-row-lines .x-grid-row-focused .x-grid-cell-inner-checkcolumn {
+  padding-top: 3px;
+  padding-bottom: 2px;
+}
+
+/* line 12, ../../../../ext/packages/ext-theme-neutral/sass/src/grid/column/CheckColumn.scss */
+.x-grid-checkcolumn {
+  width: 13px;
+  height: 13px;
+  background: url(images/form/checkbox.gif) 0 0 no-repeat;
+}
+/* line 17, ../../../../ext/packages/ext-theme-neutral/sass/src/grid/column/CheckColumn.scss */
+.x-item-disabled .x-grid-checkcolumn {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+  opacity: 0.3;
+}
+
+/* line 22, ../../../../ext/packages/ext-theme-neutral/sass/src/grid/column/CheckColumn.scss */
+.x-grid-checkcolumn-checked {
+  background-position: 0 -13px;
 }
 
 /* line 1, ../../../../ext/packages/ext-theme-neutral/sass/src/grid/column/RowNumberer.scss */
