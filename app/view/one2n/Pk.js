@@ -60,6 +60,12 @@ Ext.define('Youngshine.view.one2n.Pk' ,{
 	    columns: [{
 			xtype: 'rownumberer',
 			width: 35
+		},{	
+			text: '学生姓名',
+			width: 100,
+			sortable: true,
+			menuDisabled: true,
+			dataIndex: 'studentName'
 		}, {
 			text: '课程名称',
 			flex: 1,
@@ -73,12 +79,6 @@ Ext.define('Youngshine.view.one2n.Pk' ,{
 			menuDisabled: true,
 			dataIndex: 'hour',
 			align: 'center'
-		},{	
-			text: '学生姓名',
-			width: 100,
-			sortable: true,
-			menuDisabled: true,
-			dataIndex: 'studentName'
 		},{	
 			text: '购买日期',
 			width: 100,

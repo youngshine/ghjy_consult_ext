@@ -23,14 +23,14 @@ Ext.define('Youngshine.view.West', {
 			'<div class="menuitem" title="accnt" style="margin:5px;">销售课程</div>'+
 		
 			'<div style="margin:10px 0;cursor:auto;"><hr color=#eee /></div>'+
-			'<div class="menuitem" title="classesPk" style="margin:5px;">待分班排课</div>'+		
-			'<div class="menuitem" title="one2nPk" style="margin:5px;">待一对N排课</div>'+
+			'<div class="menuitem" title="classesPk" style="margin:5px;">大小班课程待分班</div>'+		
+			'<div class="menuitem" title="one2nPk" style="margin:5px;">一对N课程待排课</div>'+
 		
 			'<div style="margin:10px 0;cursor:auto;"><hr color=#eee /></div>'+
 			'<div class="menuitem" title="classes" style="margin:5px;">大小班级管理</div>'+
 		
 			'<div style="margin:10px 0;cursor:auto;"><hr color=#eee /></div>'+
-			'<div class="menuitem" title="teacher" style="margin:5px;">教师课程表</div>'+
+			'<div class="menuitem" title="teacher" style="margin:5px;">教师课程表管理</div>'+
 
 			'<div style="margin:10px 0;cursor:auto;"><hr color=#eee /></div>'+
 			'<div class="menuitem" title="pswreset" style="margin:5px;">账号设置</div>'+

@@ -83,17 +83,50 @@ Ext.define('Youngshine.view.teacher.List' ,{
 			 menuDisabled: true,
 	         dataIndex: 'subjectName'
 	     }, {
-	         text: '一对N上课时间列表',
-	         width: 250,
-	         sortable: false,
-			 menuDisabled: true,
-	         dataIndex: 'timely_list_one2n'
-	     }, {
 	         text: '备注',
-	         flex: 1,
+	         width: 150,
 	         sortable: false,
 			 menuDisabled: true,
 	         dataIndex: 'note'
+	     }, {
+	         text: '一对N上课时间列表',
+	         flex: 1,
+	         //sortable: false,
+			 menuDisabled: true,
+	         dataIndex: 'timely_list_one2n'
+			 
+   		},{	 
+   			menuDisabled: true,
+   			sortable: false,
+   			xtype: 'actioncolumn',
+   			width: 30,
+   			items: [{
+   				//iconCls: 'add',
+   				icon: 'resources/images/my_setup_icon.png',
+   				tooltip: '一对N上课时间设定',
+   				handler: function(grid, rowIndex, colIndex) {
+   					grid.getSelectionModel().select(rowIndex); // 高亮
+   					var rec = grid.getStore().getAt(rowIndex);
+   					//Ext.Msg.alert('Sell', 'Sell ' + rec.get('company'));
+   					//me.fireEvent('adminEdit');
+   					grid.up('window').onOne2nKcb(rec); 
+   				}	
+   			}]	
+		},{	 
+			menuDisabled: true,
+			sortable: false,
+			xtype: 'actioncolumn',
+			width: 30,
+			items: [{
+				//iconCls: 'add',
+				icon: 'resources/images/my_user_icon.png',
+				tooltip: '一对N学生',
+				handler: function(grid, rowIndex, colIndex) {
+					grid.getSelectionModel().select(rowIndex); // 高亮
+					var rec = grid.getStore().getAt(rowIndex);
+					grid.up('window').onOne2nStudent(rec); 
+				}	
+			}]
 		},{	 
 			menuDisabled: true,
 			sortable: false,
@@ -110,22 +143,7 @@ Ext.define('Youngshine.view.teacher.List' ,{
 					//me.fireEvent('adminEdit');
 					grid.up('window').onKcb(rec); 
 				}	
-			}]		
-		},{	 
-			menuDisabled: true,
-			sortable: false,
-			xtype: 'actioncolumn',
-			width: 30,
-			items: [{
-				//iconCls: 'add',
-				icon: 'resources/images/my_user_icon.png',
-				tooltip: '一对N学生',
-				handler: function(grid, rowIndex, colIndex) {
-					grid.getSelectionModel().select(rowIndex); // 高亮
-					var rec = grid.getStore().getAt(rowIndex);
-					grid.up('window').onOne2nStudent(rec); 
-				}	
-			}]			 		 
+			}]					 		 
 	    }],     
 	}],
 	
@@ -239,5 +257,43 @@ Ext.define('Youngshine.view.teacher.List' ,{
                 }
             },
         });
-	}
+	},
+	
+	// 一对一上课时间，预先设定
+	onOne2nKcb: function(record){
+		var me = this;
+		var win = Ext.create('Youngshine.view.teacher.One2nKcb');
+		//win.down('form').loadRecord(record); //binding data
+		win.parentRecord = record // 传递参数 teacherID,timely_list_one2n
+		win.parentView = me 
+		
+		// 临时store，先清空
+		win.down('grid').getStore().removeAll()
+		
+		// 上课周期列表数组，list.store
+		var timely_list = record.data.timely_list_one2n.trim()
+		
+		// 如果尚未设定上课时间（空白），则不需经过转换
+		if(timely_list != '' && timely_list != null){
+			timely_list = record.data.timely_list_one2n.split(',')
+			timely_list = Ext.Array.sort(timely_list); //排序
+			console.log(timely_list)
+			var timely = [];
+			for (var i = 0; i < timely_list.length; i++) {
+				timely.push({
+					"timely"           : timely_list[i], 
+					//"teacherID"        : record.data.teacherID,
+					//"timely_list_one2n": record.data.timely_list_one2n,
+				})
+				/*
+				var w = timely_list[i].substr(0,2),
+					h = timely_list[i].substr(2,2),
+					m = timely_list[i].substr(5,2)
+				timely.push( {"w":w,"h":h,"m":m}  )
+				*/
+			}
+			console.log(timely);
+			win.down('grid').getStore().loadData(timely)
+		}
+	},
 });

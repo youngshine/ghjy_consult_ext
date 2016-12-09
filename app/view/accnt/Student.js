@@ -99,7 +99,15 @@ Ext.define('Youngshine.view.accnt.Student' ,{ // 公用类find，查找选择学
 			flex: 1,
 			//sortable: false,
 			menuDisabled: true,
-			dataIndex: 'schoolsub'		 
+			dataIndex: 'schoolsub'	
+	     }, {
+	         text: '扫码',
+	         width: 30,
+			 menuDisabled: true,
+	         dataIndex: 'wxID',
+			 renderer : function(val) {
+	                return val == '' ? '' : '是'
+	            },	 
 		}],
 		
 		listeners: {

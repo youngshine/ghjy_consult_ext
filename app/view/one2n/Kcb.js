@@ -46,9 +46,9 @@ Ext.define('Youngshine.view.one2n.Kcb', {
 	    columns: [{
 			//text: '打勾',
 			xtype: 'checkcolumn',
-            //header: '选择',
+            header: '打勾选择',
             dataIndex: 'check',
-            width: 50,
+            width: 60,
 			menuDisabled: true,
 			sortable: false,
             stopSelection: true
